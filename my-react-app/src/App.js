@@ -3,15 +3,18 @@ import { BrowserRouter as Router, Route, Routes, Navigate, Link } from 'react-ro
 import Login from './components/login';
 import Account from './components/account'; // This is the new page component
 import Home from './components/home';
+import PictureButton from './components/PictureButton';
 
 function App() {
   return (
     <div>
       <header>
-        <h1 className="heading">NFT Nexus</h1>
-        <Link to="/home">
-        <button>Home</button>
-        </Link>
+        <nav class="navbar">
+          <PictureButton src="/images/random-logos/nft-nexus.png" alt="Home" to="/"/>
+          <ul class="nav-links">
+            <li><a href="/login">Login</a></li>
+          </ul>
+        </nav>
       </header>
       
       <Routes>
