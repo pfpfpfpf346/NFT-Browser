@@ -18,8 +18,8 @@ const Login = () => {
 
   return (
     <div>
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
+      <h1 align="center">Login</h1>
+      <form align="center" onSubmit={handleSubmit}>
         <div>
           <label>Username: </label>
           <input

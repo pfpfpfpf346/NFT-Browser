@@ -12,6 +12,9 @@ function App() {
         <nav class="navbar">
           <PictureButton src="/images/random-logos/nft-nexus.png" alt="Home" to="/"/>
           <ul class="nav-links">
+            <li><a href="/browse">Browse NFTS</a></li>
+            <li><a href="/collections">Collections</a></li>
+            <li><a href="/guides">Guides</a></li>
             <li><a href="/login">Login</a></li>
           </ul>
         </nav>
