@@ -1,20 +1,32 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Login = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent page refresh
     // Add authentication logic here
     if (username === '' || password === '') {
       alert('Please enter both username and password');
-    } else {
+    }
+    try {
+      const response = await axios.post('/login', { username, password });
+      localStorage.setItem('token', response.data.token);
+      alert('Login successful');
       navigate('/account', { state: { message: username } });
+    } catch (error) {
+      console.error('Login error', error);
+      alert('Invalid credentials');
     }
   };
+
+  const handleRegister = () => {
+    navigate('/register');
+  }
 
   return (
     <div>
@@ -40,6 +52,9 @@ const Login = () => {
         </div>
         <button type="submit">Login</button>
       </form>
+      <div align="center">
+        <button onClick={handleRegister}>Register</button>
+      </div>
     </div>
   );
 };
