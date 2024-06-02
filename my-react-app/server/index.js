@@ -72,7 +72,7 @@ app.post('/login', async (req, res) => {
     const token = jwt.sign({ userId: user.id }, jwtSecretKey, { expiresIn: '1h' });
     res.json({ token });
   } catch (err) {
-    console.log('error no idk');
+    console.log('error other');
     res.status(400).json({ error: err.message});
   }
 });
