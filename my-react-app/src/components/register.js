@@ -9,6 +9,7 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
+      console.log('ho')
       const response = await axios.post('/register', { username, password }, {
         headers: {
           'Content-Type': 'application/json',
