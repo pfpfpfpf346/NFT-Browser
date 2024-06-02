@@ -17,11 +17,11 @@ const Register = () => {
       alert('Registration successful');
     } catch (error) {
       if (error.response){
-        console.error('response error', error);
+        console.error('response error', error.response);
       } else if (error.request){
-        console.error('request error', error);
+        console.error('request error', error.request);
       } else if (error.message){
-        console.error('message error', error);
+        console.error('message error', error.message);
       }
       console.error('Registration error', error);
       alert('Registration failed');
