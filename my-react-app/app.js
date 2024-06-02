@@ -32,24 +32,19 @@ app.post('/login', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
     if (result.rows.length === 0) {
-      console.log('error length 0');
       return res.status(400).json({ error: 'Invalid credentials' });
     }
 
     const user = result.rows[0];
-
     const isMatch = await bcrypt.compare(password, user.password);
-
     if (!isMatch) {
-      console.log('error no match');
       return res.status(400).json({ error: 'Invalid credentials' });
     }
 
     const token = jwt.sign({ userId: user.id }, jwtSecretKey, { expiresIn: '1h' });
     res.json({ token });
   } catch (err) {
-    console.log('error no idk');
-    res.status(400).json({ error: err.message});
+    res.status(400).json({ error: err.message });
   }
 });
 

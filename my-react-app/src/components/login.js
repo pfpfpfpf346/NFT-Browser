@@ -14,10 +14,9 @@ const Login = () => {
       alert('Please enter both username and password');
     }
     try {
-      const response = await axios.post('/login', { username, password });
+      const response = await axios.post('http://localhost:5000/login', { username, password });
       localStorage.setItem('token', response.data.token);
       alert('Login successful');
-      navigate('/account', { state: { message: username } });
     } catch (error) {
       console.error('Login error', error);
       alert('Invalid credentials');
