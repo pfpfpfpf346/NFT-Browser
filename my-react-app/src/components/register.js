@@ -9,10 +9,7 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/register', { username, password }, {
-        headers: {
-          'Content-Type': 'application/json'
-      }});
+      const response = await axios.post('/register', { username, password });
       alert('Registration successful');
     } catch (error) {
       console.error('Registration error', error);
