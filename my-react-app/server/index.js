@@ -1,3 +1,4 @@
+//server/index.js
 const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
@@ -9,11 +10,13 @@ require('dotenv').config();
 const port = process.env.PORT || 5000;
 
 // Enable CORS
+/*
 app.use(cors({
   origin: 'https://nft-browser.vercel.app',
   methods: 'GET,POST,PUT,DELETE',
   allowedHeaders: 'Content-Type,Authorization'
 }));
+*/
 app.use(express.json());
 
 // PostgreSQL pool setup
