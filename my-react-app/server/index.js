@@ -25,7 +25,7 @@ console.log(process.env.DATABASE_URL)
 // Register/Login
 const jwtSecretKey = process.env.JWT_SECRET;
 
-app.post('https://nft-browser.vercel.app/register', async (req, res) => {
+app.post('/register', async (req, res) => {
   const { username, password } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
   try {
@@ -39,7 +39,7 @@ app.post('https://nft-browser.vercel.app/register', async (req, res) => {
   }
 });
 
-app.post('https://nft-browser.vercel.app/login', async (req, res) => {
+app.post('/login', async (req, res) => {
   const { username, password } = req.body;
   try {
     const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);

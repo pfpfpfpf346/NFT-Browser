@@ -1,3 +1,4 @@
+// src/components/login.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -14,7 +15,7 @@ const Login = () => {
       alert('Please enter both username and password');
     }
     try {
-      const response = await axios.post('https://nft-browser.vercel.app/login', { username, password });
+      const response = await axios.post('/login', { username, password });
       localStorage.setItem('token', response.data.token);
       alert('Login successful');
     } catch (error) {
