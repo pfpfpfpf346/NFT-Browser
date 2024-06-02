@@ -9,7 +9,7 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/register', { username, password });
+      const response = await axios.post('https://nft-browser.vercel.app/register', { username, password });
       alert('Registration successful');
     } catch (error) {
       console.error('Registration error', error);
