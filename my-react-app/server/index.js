@@ -29,7 +29,7 @@ const pool = new Pool({
 const jwtSecretKey = process.env.JWT_SECRET;
 
 // Register endpoint
-app.post('/register', async (req, res) => {
+app.post('/api/register', async (req, res) => {
   const { username, password } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
   try {
