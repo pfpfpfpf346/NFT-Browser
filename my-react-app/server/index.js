@@ -1,6 +1,8 @@
 const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
+const bcrypt = require('bcrypt'); // Ensure bcrypt is required
+const jwt = require('jsonwebtoken'); // Ensure jwt is required
 const app = express();
 const port = process.env.PORT || 5000;
 require('dotenv').config();
@@ -34,7 +36,7 @@ app.get('/api/data', async (req, res) => {
   }
 });
 
-// register/login
+// Register/Login
 const jwtSecretKey = process.env.JWT_SECRET;
 
 app.post('/register', async (req, res) => {
@@ -61,7 +63,6 @@ app.post('/login', async (req, res) => {
     }
 
     const user = result.rows[0];
-
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
@@ -72,8 +73,8 @@ app.post('/login', async (req, res) => {
     const token = jwt.sign({ userId: user.id }, jwtSecretKey, { expiresIn: '1h' });
     res.json({ token });
   } catch (err) {
-    console.log('error other');
-    res.status(400).json({ error: err.message});
+    console.log('error no idk');
+    res.status(400).json({ error: err.message });
   }
 });
 
