@@ -10,12 +10,12 @@ require('dotenv').config();
 const port = process.env.PORT || 5000;
 
 // Enable CORS
+app.use(express.json());
 app.use(cors({
   origin: 'https://nft-browser.vercel.app',
   methods: 'GET,POST,PUT,DELETE',
   allowedHeaders: 'Content-Type,Authorization'
 }));
-app.use(express.json());
 
 // PostgreSQL pool setup
 const pool = new Pool({
@@ -27,10 +27,6 @@ const pool = new Pool({
 
 // JWT secret key
 const jwtSecretKey = process.env.JWT_SECRET;
-
-app.post('/test', (req, res) => {
-  res.send('POST request to /test successful');
-});
 
 // Register endpoint
 app.post('/register', async (req, res) => {
