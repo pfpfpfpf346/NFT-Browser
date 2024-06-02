@@ -30,7 +30,7 @@ const Login = () => {
   return (
     <div>
       <h1 align="center">Login</h1>
-      <form align="center" onSubmit={handleSubmit}>
+      <form class="form-center" onSubmit={handleSubmit}>
         <div>
           <label>Username: </label>
           <input
