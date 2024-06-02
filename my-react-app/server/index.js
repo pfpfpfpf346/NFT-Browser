@@ -20,8 +20,6 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
-console.log(process.env.DATABASE_URL)
-
 // Register/Login
 const jwtSecretKey = process.env.JWT_SECRET;
 
