@@ -1,6 +1,6 @@
-// src/components/login.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -14,12 +14,10 @@ const Login = () => {
       alert('Please enter both username and password');
     }
     try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        body: { username, password }
-      });
+      const response = await axios.post('https://nft-browser.vercel.app/api/login', { username, password });
       localStorage.setItem('token', response.data.token);
       alert('Login successful');
+      navigate('/account', { state: { username } });
     } catch (error) {
       console.error('Login error', error);
       alert('Invalid credentials');
@@ -33,7 +31,7 @@ const Login = () => {
   return (
     <div>
       <h1 align="center">Login</h1>
-      <form class="form-center" onSubmit={handleSubmit}>
+      <form align="center" onSubmit={handleSubmit}>
         <div>
           <label>Username: </label>
           <input
