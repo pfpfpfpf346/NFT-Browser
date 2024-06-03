@@ -20,7 +20,11 @@ module.exports = async (req, res) => {
         return res.status(405).json({ success: false, message: 'Method Not Allowed' });
     }
 
+    console.log('hi4')
+
     const { username, password } = req.body;
+
+    console.log('hi5')
 
     if (!username || !password) {
         return res.status(400).json({ success: false, message: 'Username and password are required' });
