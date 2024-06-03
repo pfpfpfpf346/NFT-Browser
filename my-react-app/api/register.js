@@ -1,52 +1,31 @@
-// api/register.js
-const { Client } = require('pg');
-require('dotenv').config();
+const express = require('express');
 const bcryptjs = require('bcryptjs');
+const { Pool } = require('pg');
+const cors = require('cors');
+const app = express();
+require('dotenv').config();
 
-// Initialize a PostgreSQL client
-const client = new Client({
-    connectionString: process.env.POSTGRES_URL
+app.use(cors()); // Enable CORS for all routes
+app.use(express.json());
+
+const pool = new Pool({
+  connectionString: process.env.POSTGRES_URL,
 });
-  
-// Connect to the PostgreSQL database
-client.connect();
-  
-// Handler function
-module.exports = async (req, res) => {
 
-    // Set CORS headers to allow requests from all origins
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+app.post('/api/register', async (req, res) => {
+  const { username, password } = req.body;
+  const hashedPassword = await bcryptjs.hash(password, 10);
+  try {
+    const result = await pool.query(
+      'INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *',
+      [username, hashedPassword]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
 
-    // Check if the request method is OPTIONS (preflight request)
-    if (req.method === 'OPTIONS') {
-        // Respond to preflight request immediately
-        res.status(200).end();
-        return;
-    }
-
-    if (req.method !== 'POST') {
-        return res.status(405).json({ success: false, message: 'Method Not Allowed' });
-    }
-
-    const { username, password } = req.body;
-
-    if (!username || !password) {
-        return res.status(400).json({ success: false, message: 'Username and password are required' });
-    }
-
-    try {
-        const hashedPassword = await bcryptjs.hash(password, 10);
-        const query = 'INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *';
-        const values = [username, hashedPassword];
-
-        const dbResponse = await client.query(query, values);
-        const newUser = dbResponse.rows[0];
-
-        return res.status(201).json({ success: true, user: newUser });
-    } catch (error) {
-        console.error('Error during registration:', error);
-        return res.status(500).json({ success: false, message: 'Internal Server Error' });
-    }
-};
+app.listen(process.env.PORT || 5000, () => {
+  console.log(`Server running on port ${process.env.PORT || 5000}`);
+});

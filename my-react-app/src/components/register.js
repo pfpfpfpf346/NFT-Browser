@@ -1,5 +1,6 @@
 // src/components/Register.js
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const Register = () => {
   const [username, setUsername] = useState('');
@@ -8,10 +9,7 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/register', {
-        method: 'POST',
-        body: { username, password }
-      });
+      const response = await axios.post('https://nft-browser.vercel.app/api/register', { username, password });
       alert('Registration successful');
     } catch (error) {
       console.error('Registration error', error);
