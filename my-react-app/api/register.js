@@ -11,6 +11,7 @@ const client = new Client({
   
 // Connect to the PostgreSQL database
 client.connect();
+console.log('hi3')
   
 // Handler function
 module.exports = async (req, res) => {
