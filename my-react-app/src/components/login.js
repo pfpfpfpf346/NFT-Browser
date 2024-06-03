@@ -14,7 +14,7 @@ const Login = () => {
       alert('Please enter both username and password');
     }
     try {
-      const response = await fetch('/api/login', {
+      const response = await fetch('https://nft-browser.vercel.app/api/login', {
         method: 'POST',
         body: { username, password }
       });
