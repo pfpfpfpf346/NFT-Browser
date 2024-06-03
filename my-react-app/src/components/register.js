@@ -1,7 +1,6 @@
 // src/components/register.js
 import React, { useState } from 'react';
 import axios from 'axios';
-require('dotenv').config();
 
 const Register = () => {
   const [username, setUsername] = useState('');
@@ -10,7 +9,7 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(process.env.DATABASE_URL + '/register', { username, password });
+      const response = await axios.post('/api/register', { username, password });
       alert('Registration successful');
     } catch (error) {
       if (error.response){

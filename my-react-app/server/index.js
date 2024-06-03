@@ -1,71 +1,34 @@
-//server/index.js
-const express = require('express');
-const { Pool } = require('pg');
-const cors = require('cors');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const app = express();
+const { Client } = require('pg');
 require('dotenv').config();
 
-const port = process.env.PORT || 5000;
-
-// Enable CORS
-app.use(cors({
-  origin: 'https://nft-browser.vercel.app',
-  methods: 'GET,POST,PUT,DELETE',
-  allowedHeaders: 'Content-Type,Authorization'
-}));
-app.use(express.json());
-
-// PostgreSQL pool setup
-const pool = new Pool({
+// Initialize a PostgreSQL client
+const client = new Client({
   connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
 });
 
-// JWT secret key
-const jwtSecretKey = process.env.JWT_SECRET;
+// Connect to the PostgreSQL database
+client.connect();
 
-// Register endpoint
-app.post('/register', async (req, res) => {
-  const { username, password } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
+// Handler function
+module.exports = async (req, res) => {
   try {
-    const result = await pool.query(
-      'INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *',
-      [username, hashedPassword]
-    );
-    res.status(201).json(result.rows[0]);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+    // Assuming req.body contains the data to be inserted into the database
+    const { username, password} = req.body;
+
+    // Prepare the SQL query to insert data into the database
+    const query = 'INSERT INTO users (name, password) VALUES ($1, $2) RETURNING *';
+    const values = [username, password];
+
+    // Execute the query
+    const dbResponse = await client.query(query, values);
+
+    // Extract the inserted data (assuming the first row is the newly inserted record)
+    const newUser = dbResponse.rows[0];
+
+    // Return the inserted data in the response
+    res.status(201).json(newUser);
+  } catch (error) {
+    console.error('Error posting to database:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
-});
-
-// Login endpoint
-app.post('/login', async (req, res) => {
-  const { username, password } = req.body;
-  try {
-    const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
-    if (result.rows.length === 0) {
-      return res.status(400).json({ error: 'Invalid credentials' });
-    }
-
-    const user = result.rows[0];
-    const isMatch = await bcrypt.compare(password, user.password);
-
-    if (!isMatch) {
-      return res.status(400).json({ error: 'Invalid credentials' });
-    }
-
-    const token = jwt.sign({ userId: user.id }, jwtSecretKey, { expiresIn: '1h' });
-    res.json({ token });
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-});
-
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+};
