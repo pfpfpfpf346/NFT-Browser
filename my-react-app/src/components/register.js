@@ -8,7 +8,7 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const responseData = await fetch('/api/submit-data', {
+      const responseData = await fetch('/api/register', {
         method: 'POST',
         body: { username, password }
       });
