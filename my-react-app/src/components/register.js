@@ -1,4 +1,4 @@
-// src/components/register.js
+// src/components/Register.js
 import React, { useState } from 'react';
 import axios from 'axios';
 
@@ -12,11 +12,11 @@ const Register = () => {
       const response = await axios.post('/api/register', { username, password });
       alert('Registration successful');
     } catch (error) {
-      if (error.response){
+      if (error.response) {
         console.error('response error', error.response);
-      } else if (error.request){
+      } else if (error.request) {
         console.error('request error', error.request);
-      } else if (error.message){
+      } else {
         console.error('message error', error.message);
       }
       console.error('Registration error', error);
@@ -25,9 +25,21 @@ const Register = () => {
   };
 
   return (
-    <form class="form-center" onSubmit={handleRegister}>
-      <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" />
-      <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
+    <form className="form-center" onSubmit={handleRegister}>
+      <input
+        type="text"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        placeholder="Username"
+        required
+      />
+      <input
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="Password"
+        required
+      />
       <button type="submit">Register</button>
     </form>
   );
