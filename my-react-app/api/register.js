@@ -1,9 +1,8 @@
 // api/register.js
+console.log('hi2')
 const { Client } = require('pg');
 require('dotenv').config();
 const bcrypt = require('bcryptjs');
-
-console.log('hi2')
 
 // Initialize a PostgreSQL client
 const client = new Client({
@@ -12,8 +11,6 @@ const client = new Client({
   
 // Connect to the PostgreSQL database
 client.connect();
-
-console.log('connected')
   
 // Handler function
 module.exports = async (req, res) => {
@@ -23,8 +20,6 @@ module.exports = async (req, res) => {
     }
 
     const { username, password } = req.body;
-
-    console.log('user pass')
 
     if (!username || !password) {
         return res.status(400).json({ success: false, message: 'Username and password are required' });
