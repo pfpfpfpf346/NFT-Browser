@@ -9,6 +9,7 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
+      console.log('hi1')
       const response = await axios.post('/api/register', { username, password });
       alert('Registration successful');
     } catch (error) {
