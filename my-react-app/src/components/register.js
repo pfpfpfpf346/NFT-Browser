@@ -8,6 +8,19 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
+
+      // Set CORS headers to allow requests from all origins
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+
+      // Check if the request method is OPTIONS (preflight request)
+      if (req.method === 'OPTIONS') {
+          // Respond to preflight request immediately
+          res.status(200).end();
+          return;
+      }
+
       const response = await fetch('/api/register', {
         method: 'POST',
         body: { username, password }
