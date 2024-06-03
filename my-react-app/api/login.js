@@ -1,7 +1,7 @@
 // api/login.js
 const { Client } = require('pg');
 require('dotenv').config();
-const bcrypt = require('bcryptjs');
+const bcryptjs = require('bcryptjs');
 
 // Initialize a PostgreSQL client
 const client = new Client({
@@ -26,7 +26,7 @@ module.exports = async (req, res) => {
         }
 
         const user = result.rows[0];
-        const isMatch = await bcrypt.compare(password, user.password);
+        const isMatch = await bcryptjs.compare(password, user.password);
         if (!isMatch) {
             return res.status(400).json({ error: 'Incorrect password' });
         }

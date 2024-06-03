@@ -1,7 +1,7 @@
 // api/register.js
 const { Client } = require('pg');
 require('dotenv').config();
-const bcrypt = require('bcryptjs');
+const bcryptjs = require('bcryptjs');
 
 // Initialize a PostgreSQL client
 const client = new Client({
@@ -37,7 +37,7 @@ module.exports = async (req, res) => {
     }
 
     try {
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcryptjs.hash(password, 10);
         const query = 'INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *';
         const values = [username, hashedPassword];
 
