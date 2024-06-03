@@ -1,10 +1,11 @@
+// api/login.js
 const { Client } = require('pg');
 require('dotenv').config();
 const bcrypt = require('bcryptjs');
 
 // Initialize a PostgreSQL client
 const client = new Client({
-        connectionString: process.env.DATABASE_URL
+        connectionString: process.env.POSTGRES_URL
     });
   
 // Connect to the PostgreSQL database
