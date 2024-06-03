@@ -12,7 +12,6 @@ const Register = () => {
         method: 'POST',
         body: { username, password }
       });
-      console.log('hi1')
       alert('Registration successful');
     } catch (error) {
       console.error('Registration error', error);

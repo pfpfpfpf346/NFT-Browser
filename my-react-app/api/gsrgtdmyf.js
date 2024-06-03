@@ -4,21 +4,12 @@ require('dotenv').config();
 const bcrypt = require('bcryptjs');
 
 // Initialize a PostgreSQL client
-try {
-    const client = new Client({
-            connectionString: process.env.POSTGRES_URL
-        });
-} catch (e) {
-    console.log('client error')
-}
+const client = new Client({
+    connectionString: process.env.POSTGRES_URL
+});
   
 // Connect to the PostgreSQL database
-try {
-    client.connect();
-} catch (e) {
-    console.log('connect error')
-}
-
+client.connect();
   
 // Handler function
 module.exports = async (req, res) => {
@@ -34,14 +25,13 @@ module.exports = async (req, res) => {
     }
 
     try {
-        console.log('hi1')
         const hashedPassword = await bcrypt.hash(password, 10);
         const query = 'INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *';
         const values = [username, hashedPassword];
-        console.log('hi2')
+
         const dbResponse = await client.query(query, values);
         const newUser = dbResponse.rows[0];
-        console.log('hi3')
+
         return res.status(201).json({ success: true, user: newUser });
     } catch (error) {
         console.error('Error during registration:', error);
