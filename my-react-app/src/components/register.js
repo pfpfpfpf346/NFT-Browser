@@ -8,19 +8,12 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const responseData = await fetch('/api/register', {
+      const response = await fetch('/api/register', {
         method: 'POST',
         body: { username, password }
       });
       alert('Registration successful');
     } catch (error) {
-      if (error.response) {
-        console.error('response error', error.response);
-      } else if (error.request) {
-        console.error('request error', error.request);
-      } else {
-        console.error('message error', error.message);
-      }
       console.error('Registration error', error);
       alert('Registration failed');
     }

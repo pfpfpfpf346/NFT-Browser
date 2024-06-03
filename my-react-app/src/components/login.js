@@ -1,7 +1,6 @@
 // src/components/login.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -15,7 +14,10 @@ const Login = () => {
       alert('Please enter both username and password');
     }
     try {
-      const response = await axios.post('/api/login', { username, password });
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        body: { username, password }
+      });
       localStorage.setItem('token', response.data.token);
       alert('Login successful');
     } catch (error) {
