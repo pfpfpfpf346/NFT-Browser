@@ -1,5 +1,4 @@
 const { Client } = require('pg');
-const axios = require('axios');
 require('dotenv').config();
 const bcrypt = require('bcryptjs');
 
@@ -8,11 +7,11 @@ const client = new Client({
         connectionString: process.env.DATABASE_URL
     });
   
-    // Connect to the PostgreSQL database
-    client.connect();
+// Connect to the PostgreSQL database
+client.connect();
   
-    // Handler function
-    module.exports = async (req, res) => {
+// Handler function
+module.exports = async (req, res) => {
 
     if (req.method !== 'POST') {
         return res.status(405).json({ success: false, message: 'Method Not Allowed' });
@@ -33,8 +32,8 @@ const client = new Client({
         const newUser = dbResponse.rows[0];
     
         return res.status(201).json({ success: true, user: newUser });
-      } catch (error) {
+    } catch (error) {
         console.error('Error during registration:', error);
         return res.status(500).json({ success: false, message: 'Internal Server Error' });
-      }
-  };
+    }
+};

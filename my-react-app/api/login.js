@@ -1,21 +1,38 @@
-const axios = require('axios');
+const { Client } = require('pg');
+require('dotenv').config();
+const bcrypt = require('bcryptjs');
+
+// Initialize a PostgreSQL client
+const client = new Client({
+        connectionString: process.env.DATABASE_URL
+    });
+  
+// Connect to the PostgreSQL database
+client.connect();
 
 module.exports = async (req, res) => {
-  try {
-    // Assuming req.body contains the username and password sent by the client
+
+    if (req.method !== 'POST') {
+        return res.status(405).json({ success: false, message: 'Method Not Allowed' });
+    }
+
     const { username, password } = req.body;
 
-    // You would replace this with actual database interaction code
-    // For demonstration purposes, we'll just check if the username and password match
-    if (username === 'exampleUser' && password === 'examplePassword') {
-      // Return success response
-      res.status(200).json({ success: true, message: 'Login successful' });
-    } else {
-      // Return error response for invalid credentials
-      res.status(401).json({ success: false, message: 'Invalid username or password' });
+    try {
+        const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+        if (result.rows.length === 0) {
+            return res.status(400).json({ error: 'User not found' });
+        }
+
+        const user = result.rows[0];
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ error: 'Incorrect password' });
+        }
+
+        const token = jwt.sign({ userId: user.id }, jwtSecretKey, { expiresIn: '1h' });
+        res.json({ token });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
-  } catch (error) {
-    console.error('Error during login:', error);
-    res.status(500).json({ success: false, message: 'Internal Server Error' });
-  }
 };
