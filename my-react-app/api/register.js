@@ -26,7 +26,6 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
-<<<<<<< HEAD:my-react-app/api/backend.js
 app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
   try {
@@ -48,8 +47,6 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-=======
->>>>>>> parent of dae4205 (login):my-react-app/api/register.js
 app.listen(process.env.PORT || 5000, () => {
   console.log(`Server running on port ${process.env.PORT || 5000}`);
 });
