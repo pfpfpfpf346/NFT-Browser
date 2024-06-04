@@ -13,6 +13,8 @@ const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,
 });
 
+const jwtSecretKey = process.env.JWT_SECRET;
+
 app.post('/api/register', async (req, res) => {
   const { username, password } = req.body;
   const hashedPassword = await bcryptjs.hash(password, 10);
@@ -26,8 +28,6 @@ app.post('/api/register', async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 });
-
-const jwtSecretKey = process.env.JWT_SECRET;
 
 app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
