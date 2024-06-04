@@ -27,6 +27,8 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
+const jwtSecretKey = process.env.JWT_SECRET;
+
 app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
   try {
