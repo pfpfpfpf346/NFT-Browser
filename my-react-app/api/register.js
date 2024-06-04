@@ -6,24 +6,19 @@ const cors = require('cors');
 const app = express();
 require('dotenv').config();
 
-app.use(cors({
-  origin: 'https://nft-browser.vercel.app',
-  methods: 'GET,POST,PUT,DELETE',
-  allowedHeaders: 'Content-Type,Authorization'
-}));
+app.use(cors());
 app.use(express.json());
 
 const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,
-  ssl: {
-    rejectUnauthorized: false // Ensure SSL connection is established
-  }
 });
 
 const jwtSecretKey = process.env.JWT_SECRET;
 if (!jwtSecretKey) {
   console.error('JWT_SECRET is not defined in the environment variables.');
   process.exit(1);
+} else {
+  console.log('JWT_SECRET is defined')
 }
 
 app.post('/api/register', async (req, res) => {
