@@ -20,21 +20,13 @@ const pool = new Pool({
   }
 });
 
-pool.query('SELECT NOW()', (err, res) => {
-  if (err) {
-    res.status(400).json({ error: err.message });
-  } else {
-    res.status(201).json(result.rows[0]);
-  }
-  pool.end();
-});
-
 const jwtSecretKey = process.env.JWT_SECRET;
 if (!jwtSecretKey) {
-  res.status(400).json({ error: 'JWT_SECRET is not defined in the environment variables.' });
+  alert('JWT_SECRET is not defined in the environment variables');
+  console.error('JWT_SECRET is not defined in the environment variables.');
   process.exit(1);
 } else {
-  res.status(201).json(process.env.JWT_SECRET);
+  console.log('JWT_SECRET is defined')
 }
 
 app.post('/api/register', async (req, res) => {
@@ -52,6 +44,9 @@ app.post('/api/register', async (req, res) => {
 });
 
 app.post('/api/login', async (req, res) => {
+  
+  alert('hi');
+
   const { username, password } = req.body;
   try {
     const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
@@ -64,6 +59,7 @@ app.post('/api/login', async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ error: 'Invalid credentials' });
     }
+    alert('User authenticated, generating JWT...');
     console.log('User authenticated, generating JWT...');
     const token = jwt.sign({ userId: user.id }, jwtSecretKey, { expiresIn: '1h' });
     res.json({ token });
