@@ -22,19 +22,19 @@ const pool = new Pool({
 
 pool.query('SELECT NOW()', (err, res) => {
   if (err) {
-    console.error('Connection error:', err.stack);
+    res.status(400).json({ error: err.message });
   } else {
-    console.log('Connected:', res.rows[0]);
+    res.status(201).json(result.rows[0]);
   }
   pool.end();
 });
 
 const jwtSecretKey = process.env.JWT_SECRET;
 if (!jwtSecretKey) {
-  console.error('JWT_SECRET is not defined in the environment variables.');
+  res.status(400).json({ error: 'JWT_SECRET is not defined in the environment variables.' });
   process.exit(1);
 } else {
-  console.log('JWT_SECRET is defined')
+  res.status(201).json(process.env.JWT_SECRET);
 }
 
 app.post('/api/register', async (req, res) => {
@@ -52,12 +52,6 @@ app.post('/api/register', async (req, res) => {
 });
 
 app.post('/api/login', async (req, res) => {
-  if (!jwtSecretKey) {
-    console.error('JWT_SECRET is not defined in the environment variables.');
-    process.exit(1);
-  } else {
-    console.log('JWT_SECRET is defined')
-  }
   const { username, password } = req.body;
   try {
     const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
