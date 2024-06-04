@@ -20,6 +20,15 @@ const pool = new Pool({
   }
 });
 
+pool.query('SELECT NOW()', (err, res) => {
+  if (err) {
+    console.error('Connection error:', err.stack);
+  } else {
+    console.log('Connected:', res.rows[0]);
+  }
+  pool.end();
+});
+
 const jwtSecretKey = process.env.JWT_SECRET;
 if (!jwtSecretKey) {
   console.error('JWT_SECRET is not defined in the environment variables.');
