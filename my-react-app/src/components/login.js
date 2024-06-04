@@ -1,4 +1,3 @@
-// src/components/login.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,27 +7,41 @@ const Login = () => {
   const [password, setPassword] = useState('');
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent page refresh
-    // Add authentication logic here
-    if (username === '' || password === '') {
-      alert('Please enter both username and password');
-    }
+    e.preventDefault();
+
+    // Convert data to JSON before sending the fetch request
+    const body = JSON.stringify({ username, password });
+
     try {
       const response = await fetch('https://nft-browser.vercel.app/api/login', {
         method: 'POST',
-        body: { username, password }
+        body,
+        headers: { 'Content-Type': 'application/json' },
       });
-      localStorage.setItem('token', response.data.token);
-      alert('Login successful');
+
+      // Check for successful response
+      if (!response.ok) {
+        throw new Error(`API call failed with status ${response.status}`);
+      }
+
+      const data = await response.json();
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+        alert('Login successful');
+        navigate('/'); // Redirect to home page or desired location after login
+      } else {
+        console.error('Login successful but no token received');
+        alert('Login successful but authorization might fail');
+      }
     } catch (error) {
       console.error('Login error', error);
-      alert('Invalid credentials');
+      alert('Login failed'); // More informative message
     }
   };
 
   const handleRegister = () => {
     navigate('/register');
-  }
+  };
 
   return (
     <div>
