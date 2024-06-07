@@ -4,8 +4,10 @@ import Login from './components/login';
 import Account from './components/account'; // This is the new page component
 import Home from './components/home';
 import Register from './components/register';
+import WalletExplorer from './components/wallet-explorer';
 import PictureButton from './components/PictureButton';
 import AuthButton from './components/AuthButton';
+import WalletExplorer from './components/wallet-explorer';
 import { isAuthenticated } from './utils/auth';
 
 const PrivateRoute = ({ element, ...rest }) => {
@@ -20,7 +22,9 @@ function App() {
           <PictureButton src="/images/random-logos/nft-nexus.png" alt="Home" to="/"/>
           <ul class="nav-links">
             <li><a href="/browse">Browse NFTs</a></li>
+            <li><a href="/wallet-explorer">Wallet Explorer</a></li>
             <li><a href="/guides">Guides</a></li>
+            <li><a href="/wallet-explorer">Wallet Explorer</a></li>
             <li><a href="/account">My Profile</a></li>
             <li><AuthButton /></li> {/* Use the new AuthButton component */} {/* change to login button */}
           </ul>
@@ -32,6 +36,7 @@ function App() {
         <Route path="/login" element={<Login />} /> {/* Login page content */}
         <Route path="/account" element={<PrivateRoute element={<Account />} />} /> {/* Account page content */}
         <Route path="/register" element={<Register />} />
+        <Route path="/wallet-explorer" element={<WalletExplorer />} />
         <Route path="*" element={<Navigate to="/" />} /> {/* Redirect unknown routes to home */}
       </Routes>
     </div>
