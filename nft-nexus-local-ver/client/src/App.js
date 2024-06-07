@@ -4,6 +4,7 @@ import Login from './components/login';
 import Account from './components/account'; // This is the new page component
 import Home from './components/home';
 import Register from './components/register';
+import WalletExplorer from './components/wallet-explorer';
 import PictureButton from './components/PictureButton';
 import AuthButton from './components/AuthButton';
 import WalletExplorer from './components/wallet-explorer';
@@ -21,6 +22,7 @@ function App() {
           <PictureButton src="/images/random-logos/nft-nexus.png" alt="Home" to="/"/>
           <ul class="nav-links">
             <li><a href="/browse">Browse NFTs</a></li>
+            <li><a href="/wallet-explorer">Wallet Explorer</a></li>
             <li><a href="/guides">Guides</a></li>
             <li><a href="/wallet-explorer">Wallet Explorer</a></li>
             <li><a href="/account">My Profile</a></li>
