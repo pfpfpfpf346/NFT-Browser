@@ -2,7 +2,7 @@
 Steps for local:
 1. Clone the repository
 2. Set the root directory to nft-nexus-local-ver
-3. If this is your first time running, run 'npm run install-all' to install the dependencies, then ollowed by 'npm run concurrently cross-env'.
+3. If this is your first time running, run 'npm run install-all' to install the dependencies, then followed by 'npm install concurrently cross-env'.
 4. Run 'npm start' to run the local web application
 
 Steps for vercel (still in-development, please use local version for now):
