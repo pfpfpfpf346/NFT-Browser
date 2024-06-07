@@ -1,5 +1,5 @@
 body {
-  font-family: 'Roboto'
+  font-family: 'Roboto', sans-serif;
 }
 
 .App {
@@ -52,6 +52,10 @@ body {
   padding: 8px 16px;
   border: 0px;
   transition: #7f7f7f 0.3s ease;
+}
+
+.center {
+  text-align: center;
 }
 
 .navbar {

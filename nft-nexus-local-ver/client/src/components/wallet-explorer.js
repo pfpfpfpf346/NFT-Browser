@@ -5,7 +5,7 @@ const WalletExplorer = () => {
     return (
       <main>
         <p align="center">Enter wallet address to display NFTs in a wallet:</p>
-        <form align="center">
+        <form class="center">
           <input type="text" />
           <button>Search</button>
         </form>
