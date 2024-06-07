@@ -4,5 +4,5 @@ Steps for local:
 2. If this is your first time running, run 'npm run install-all' to install the dependencies.
 3. Run 'npm start' to run the local web application
 
-Steps for vercel (still in-development):
+Steps for vercel (still in-development, please use local version for now):
 1. visit nft-browser.vercel.app
