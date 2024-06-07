@@ -46,6 +46,7 @@ app.post('/login', async (req, res) => {
   const { username, password } = req.body;
   try {
     const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+    logger.info("pool query")
     if (result.rows.length === 0) {
       return res.status(400).json({ error: 'Invalid credentials' });
     }
@@ -53,6 +54,7 @@ app.post('/login', async (req, res) => {
     const user = result.rows[0];
     const isMatch = await bcryptjs.compare(password, user.password);
     if (!isMatch) {
+      logger.info("no match")
       return res.status(400).json({ error: 'Invalid credentials' });
     }
 
