@@ -15,8 +15,8 @@ const Login = () => {
       alert('Please enter both username and password');
     }
     try {
-      const response = await axios.post('http://localhost:5000/login', { username, password });
-      // change to https://nft-browser.vercel.app/api/register for vercel
+      const response = await axios.post('https://nft-browser.vercel.app/login', { username, password });
+      // https://nft-browser.vercel.app/login / http://localhost:5000/login
       login(response.data.token); // Save the token
       alert('Login successful');
       navigate('/account', { state: { username } });
