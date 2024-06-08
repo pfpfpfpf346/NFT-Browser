@@ -2,6 +2,7 @@
 import React from 'react';
 import HomeContent from './HomeContent';
 import WalletContent from './WalletContent';
+import BuySellContent from './BuySellContent';
 
 const MainContent = ({ content }) => {
   let Component;
@@ -12,6 +13,9 @@ const MainContent = ({ content }) => {
       break;
     case 'Wallet':
       Component = WalletContent;
+      break;
+    case 'BuySell':
+      Component = BuySellContent;
       break;
     default:
       Component = HomeContent;

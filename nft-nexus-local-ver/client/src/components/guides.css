@@ -17,4 +17,19 @@
     padding: 20px;
     box-sizing: border-box;
   }
-  
+
+.sidebar button {
+  color: #fff;
+  background-color: #333;
+  text-align: left;
+  width: 200px;
+  padding: 8px 16px;
+  display: inline-block; /* Ensure the button is inline-block */
+  border: 0px;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar button:hover {
+  background-color: #999999;
+  border-radius: 4px;
+}
