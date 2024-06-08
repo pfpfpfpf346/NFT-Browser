@@ -21,8 +21,24 @@ const Login = () => {
       alert('Login successful');
       navigate('/account', { state: { username } });
     } catch (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        if (error.response.status >= 400 && error.response.status < 500) {
+          alert('Invalid username or password');
+        } else if (error.response.status >= 500 && error.response.status < 600) {
+          alert('Server error, please try again later (please report this error)');
+        } else {
+          alert('An unexpected error occurred (with response) (please report this error)');
+        }
+      } else if (error.request) {
+        // The request was made but no response was received
+        alert('No response from server, please try again later (please report this error)');
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        alert('An unexpected error occurred (with no response) (please report this error)');
+      }
       console.error('Login error', error);
-      alert('Invalid credentials');
     }
   };
 

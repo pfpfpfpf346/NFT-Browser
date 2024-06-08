@@ -38,7 +38,7 @@ app.post('/register', async (req, res) => {
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -61,7 +61,7 @@ app.post('/login', async (req, res) => {
     const token = jwt.sign({ userId: user.id }, jwtSecretKey, { expiresIn: '1h' });
     res.json({ token });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(500).json({ error: err.message });
   }
 });
 
