@@ -7,7 +7,7 @@ const api = axios.create({
 
 export const processData = async (data) => {
   try {
-    const response = await api.post('/process-data', data);
+    const response = await api.post('/search-wallet', data);
     return response.data;
   } catch (error) {
     console.error('Error processing data:', error);
