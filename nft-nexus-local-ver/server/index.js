@@ -65,6 +65,17 @@ app.post('/login', async (req, res) => {
   }
 });
 
+app.post('/process-data', authenticateToken, async (req, res) => {
+  try {
+    const data = req.body;
+    // Make a POST request to the Flask app
+    const response = await axios.post('http://localhost:5001/process', data);
+    res.json(response.data);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to process data' });
+  }
+});
+
 app.get('/api/account', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.userId;
