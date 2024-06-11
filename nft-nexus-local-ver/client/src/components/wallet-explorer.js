@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { processData } from '../utils/api';
+import { searchWallet } from '../utils/api';
 import Results from './wallet-explorer-components/results';
 
 const WalletExplorer = () => {
@@ -10,7 +10,7 @@ const WalletExplorer = () => {
     e.preventDefault(); // Prevent page refresh
     try {
       const data = { walletAddress };
-      const response = await processData(data);
+      const response = await searchWallet(data);
       console.log('Processed data:', response);
       setOutput(response);
     } catch (error) {
