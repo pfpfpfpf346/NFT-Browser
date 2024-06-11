@@ -5,7 +5,7 @@ const api = axios.create({
   baseURL: 'http://localhost:5001', // Adjust based on your server setup
 });
 
-export const processData = async (data) => {
+export const searchWallet = async (data) => {
   try {
     const response = await api.post('/search-wallet', data);
     return response.data;
