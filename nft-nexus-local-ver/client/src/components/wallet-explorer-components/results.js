@@ -1,4 +1,3 @@
-// src/components/MainContent.js
 import React from 'react';
 
 const Results = ({ content }) => {
