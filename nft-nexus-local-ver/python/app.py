@@ -21,17 +21,22 @@ def iterate_get_nfts(nfts_raw): # iterate getting sale value out of json
         name = nft["name"]
         collection = nft["collection"]
         raw_image_url = nft["image_url"]
-        if raw_image_url and len(raw_image_url) > 8 and raw_image_url[:8] == 'https://':
+        raw_opensea_url = nft["opensea_url"]
+        if raw_image_url:
             image_url = raw_image_url
         else:
             image_url = False
         raw_metadata_url = nft["metadata_url"]
-        if raw_metadata_url and len(raw_metadata_url) > 8 and raw_metadata_url[:8] == 'https://':
+        if raw_opensea_url:
+            opensea_url = raw_opensea_url
+        else:
+            opensea_url = False
+        if raw_metadata_url:
             metadata_url = raw_metadata_url
         else:
             metadata_url = False
-
-        out.append([name, collection, image_url, metadata_url])
+        
+        out.append([name, collection, image_url, opensea_url, metadata_url])
  
     return out
 

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { searchWallet } from '../utils/api';
 import Results from './wallet-explorer-components/results';
+import NFTDisplayGrid from './wallet-explorer-components/NFTDisplayGrid'
+import './wallet-explorer-components/NFTDisplayGrid.css';
 
 const WalletExplorer = () => {
   const [output, setOutput] = useState(null);
@@ -28,7 +30,7 @@ const WalletExplorer = () => {
           onChange={(e) => setWalletAddress(e.target.value)}
         />
         <button type="submit">Search</button>
-        <pre>output: {JSON.stringify(output, null, 2)}</pre>
+        <NFTDisplayGrid content={output} />
       </form>
     </main>
   );
