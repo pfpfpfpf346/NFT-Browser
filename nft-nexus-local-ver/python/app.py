@@ -42,10 +42,10 @@ def iterate_get_nfts(nfts_raw): # iterate getting sale value out of json
 
 def get_nfts_acc(acc, cursor, iter): # get sale data
     if cursor:
-        url = f"https://api.opensea.io/api/v2/chain/ethereum/account/{acc}/nfts?limit=200&next={cursor}"
+        url = f"https://api.opensea.io/api/v2/chain/ethereum/account/{acc}/nfts?limit=100&next={cursor}"
     else:
         nfts = []
-        url = f"https://api.opensea.io/api/v2/chain/ethereum/account/{acc}/nfts?limit=200"
+        url = f"https://api.opensea.io/api/v2/chain/ethereum/account/{acc}/nfts?limit=100"
     response = requests.get(url, headers=headers)
     print("get nft code:", response.status_code)
     data = response.json()
@@ -55,24 +55,21 @@ def get_nfts_acc(acc, cursor, iter): # get sale data
         next = False
     nfts_raw = data['nfts']
     nfts = iterate_get_nfts(nfts_raw)
-    if next and iter < 4:
-        time.sleep(delay)
-        return nfts + get_nfts_acc(acc, next, iter + 1)
-    else:
-        if next:
-            print("too many nfts, taking top 1000 only")
-        return nfts
+    return (nfts, next)
+        
 
 @app.route('/search-wallet', methods=['POST'])
 def search_wallet():
     data = request.get_json()
     # Perform processing with the received data
     wallet_address = data['walletAddress']
-    res = get_nfts_acc(wallet_address, False, 0)
+    cursor = data['cursor']
+    (nfts, next) = get_nfts_acc(wallet_address, cursor, 0)
     processed_data = {
         'message': 'Data processed successfully',
         'input_data': wallet_address,
-        'output': res
+        'output': nfts,
+        'next': next
     }
     return jsonify(processed_data)
 
