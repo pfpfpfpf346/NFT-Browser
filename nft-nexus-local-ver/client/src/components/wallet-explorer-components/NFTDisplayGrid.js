@@ -51,8 +51,7 @@ const Results = ({ content }) => {
               </div>
               <h3>{item[0] ? item[0] : "<no-name>"}</h3>
               <p>{item[1]}</p>
-              <a href={item[3]} target="_blank" rel="noopener noreferrer">View On Opensea |</a>
-              <a href={item[4]} target="_blank" rel="noopener noreferrer">| View Metadata</a>
+              <a href={item[3]} target="_blank" rel="noopener noreferrer">View On Opensea</a>
             </div>
           ))}
         </div>

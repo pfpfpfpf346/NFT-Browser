@@ -7,37 +7,24 @@ import time
 app = Flask(__name__)
 CORS(app)
 
-api_key = "d7bc517c25894772ae915ef729c8a443"
+opensea_api_key = "d7bc517c25894772ae915ef729c8a443"
+alchemy_api_key = "Fn6XgY7SlhdqnbN09xv5QFenmRxaK0Ej"
 delay = 0.4
 
-headers = {
+opensea_headers = {
     "accept": "application/json",
-    "X-API-KEY": api_key
+    "X-API-KEY": opensea_api_key
 }
 
 def iterate_get_nfts(nfts_raw): # iterate getting sale value out of json
     out = []
     for nft in nfts_raw:
+        collection = nft["contract"]
+        identifier = nft["identifier"]
+        token_standard = nft["token_standard"]
         name = nft["name"]
-        collection = nft["collection"]
-        raw_image_url = nft["image_url"]
-        raw_opensea_url = nft["opensea_url"]
-        if raw_image_url:
-            image_url = raw_image_url
-        else:
-            image_url = False
-        raw_metadata_url = nft["metadata_url"]
-        if raw_opensea_url:
-            opensea_url = raw_opensea_url
-        else:
-            opensea_url = False
-        if raw_metadata_url:
-            metadata_url = raw_metadata_url
-        else:
-            metadata_url = False
-        
-        out.append([name, collection, image_url, opensea_url, metadata_url])
- 
+        opensea_url = nft["opensea_url"]
+        out.append([collection, identifier, token_standard, name, opensea_url]) # nft_data
     return out
 
 def get_nfts_acc(acc, cursor, iter): # get sale data
@@ -46,7 +33,7 @@ def get_nfts_acc(acc, cursor, iter): # get sale data
     else:
         nfts = []
         url = f"https://api.opensea.io/api/v2/chain/ethereum/account/{acc}/nfts?limit=100"
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=opensea_headers)
     print("get nft code:", response.status_code)
     data = response.json()
     if 'next' in data:
@@ -56,7 +43,38 @@ def get_nfts_acc(acc, cursor, iter): # get sale data
     nfts_raw = data['nfts']
     nfts = iterate_get_nfts(nfts_raw)
     return (nfts, next)
-        
+
+def alchemy_process(nfts):
+    input = []
+    for nft in nfts:
+        input.append({"contractAddress": nft[0], 
+                      "tokenId": nft[1],
+                      "tokenType": nft[2]})
+    url = f"https://eth-mainnet.g.alchemy.com/nft/v3/{alchemy_api_key}/getNFTMetadataBatch"
+    payload = {"tokens": input, "refreshCache": False}
+    headers = {
+        "accept": "application/json",
+        "content-type": "application/json"
+    }
+    response = requests.post(url, json=payload, headers=headers)
+    print("get nft addi_data code:", response.status_code)
+    data = response.json()
+    out = []
+    for i in range(len(data["nfts"])):
+        nft_data = nfts[i]
+        nft_additional_data = data["nfts"][i]
+        opensea_metadata = nft_additional_data["contract"]["openSeaMetadata"]
+
+        name = nft_additional_data["name"]
+        if not name:
+            name = nft_data[3]
+        colle_name = opensea_metadata["collectionName"]
+        image = nft_additional_data["image"]["cachedUrl"]
+        if not image:
+            image = opensea_metadata["imageUrl"]
+        opensea_url = nft_data[4]
+        out.append([name, colle_name, image, opensea_url]) # final
+    return out
 
 @app.route('/search-wallet', methods=['POST'])
 def search_wallet():
@@ -65,10 +83,12 @@ def search_wallet():
     wallet_address = data['walletAddress']
     cursor = data['cursor']
     (nfts, next) = get_nfts_acc(wallet_address, cursor, 0)
+    #use alchemy to process nfts
+    nfts_processed = alchemy_process(nfts)
     processed_data = {
         'message': 'Data processed successfully',
         'input_data': wallet_address,
-        'output': nfts,
+        'output': nfts_processed,
         'next': next
     }
     return jsonify(processed_data)
