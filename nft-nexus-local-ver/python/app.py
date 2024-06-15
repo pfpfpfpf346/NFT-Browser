@@ -27,12 +27,15 @@ def iterate_get_nfts(nfts_raw): # iterate getting sale value out of json
         out.append([collection, identifier, token_standard, name, opensea_url]) # nft_data
     return out
 
-def get_nfts_acc(acc, cursor, iter): # get sale data
+def get_nfts_acc(acc, cursor, iter, order_dir, order_by): # get sale data
     if cursor:
         url = f"https://api.opensea.io/api/v2/chain/ethereum/account/{acc}/nfts?limit=100&next={cursor}"
     else:
         nfts = []
         url = f"https://api.opensea.io/api/v2/chain/ethereum/account/{acc}/nfts?limit=100"
+    if order_by:
+        url = url + f"&order_by={order_by}&order_direction={order_dir}"
+    print(url)
     response = requests.get(url, headers=opensea_headers)
     print("get nft code:", response.status_code)
     data = response.json()
@@ -72,8 +75,9 @@ def alchemy_process(nfts):
         image = nft_additional_data["image"]["cachedUrl"]
         if not image:
             image = opensea_metadata["imageUrl"]
+        fp = opensea_metadata["floorPrice"]
         opensea_url = nft_data[4]
-        out.append([name, colle_name, image, opensea_url]) # final
+        out.append([name, colle_name, image, fp, opensea_url]) # final
     return out
 
 @app.route('/search-wallet', methods=['POST'])
@@ -82,7 +86,20 @@ def search_wallet():
     # Perform processing with the received data
     wallet_address = data['walletAddress']
     cursor = data['cursor']
-    (nfts, next) = get_nfts_acc(wallet_address, cursor, 0)
+    sort = data['sort']
+    if sort == 'cfp':
+        order_dir = 'desc'
+        order_by = 'price'
+    elif sort == 'rr':
+        order_dir = 'desc'
+        order_by = 'created_date'
+    elif sort == 'bo':
+        order_dir = 'desc'
+        order_by = 'best_offer'
+    else:
+        order_dir = ''
+        order_by = ''
+    (nfts, next) = get_nfts_acc(wallet_address, cursor, 0, order_dir, order_by)
     #use alchemy to process nfts
     nfts_processed = alchemy_process(nfts)
     processed_data = {

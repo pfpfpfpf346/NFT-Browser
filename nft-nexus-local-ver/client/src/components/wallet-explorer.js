@@ -9,7 +9,7 @@ const WalletExplorer = () => {
   const [walletAddress, setWalletAddress] = useState('');
   const [cursor, setCursor] = useState(null);
   const [hasMore, setHasMore] = useState(false);
-  const [isSearching, setIsSearching] = useState(false);
+  const [sort, setSort] = useState('');
 
   const handleProcessData = useCallback(async (source) => {
     if (source === 'search') {
@@ -19,18 +19,19 @@ const WalletExplorer = () => {
       }
       setOutput([]); // Clear the current output when initiating a new search
       setCursor(null); // Reset the cursor when initiating a new search
+      setHasMore(false); // Reset hasMore when initiating a new search
     }
     try {
-      const data = { walletAddress, cursor };
+      const data = { walletAddress, cursor, sort };
       const response = await searchWallet(data);
       console.log('Processed data:', response);
       setCursor(response.next);
       setOutput((prevOutput) => [...prevOutput, ...response.output]);
-      setHasMore(response.output.length >= 200);
+      setHasMore(response.output.length >= 100);
     } catch (error) {
       console.error('Error fetching NFTs:', error);
     }
-  }, [walletAddress, cursor]);
+  }, [walletAddress, cursor, sort, hasMore]);
 
   useEffect(() => {
     const handleScroll = async () => {
@@ -50,8 +51,7 @@ const WalletExplorer = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setIsSearching(true);
-    handleProcessData('search').then(() => setIsSearching(false));
+    handleProcessData('search');
   };
 
   return (
@@ -63,6 +63,18 @@ const WalletExplorer = () => {
           value={walletAddress}
           onChange={(e) => setWalletAddress(e.target.value)}
         />
+
+        <select 
+          value={sort}
+          onChange={(e) => setSort(e.target.value)}
+        >
+          <option value="">Select sort (unsorted)</option>
+          <option value="cfp">Collection floor price (estimate)</option>
+          <option value="rr">Recently Received</option>
+          <option value="bo">Best Offer</option>
+          {/* Add more options as needed */}
+        </select>
+
         <button type="submit">Search</button>
       </form>
       <NFTDisplayGrid content={output} />
