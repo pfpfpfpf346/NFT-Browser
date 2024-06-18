@@ -14,3 +14,13 @@ export const searchWallet = async (data) => {
     throw error;
   }
 };
+
+export const searchCollection = async (data) => {
+  try {
+    const response = await api.post('/search-collection', (data));
+    return response.data;
+  } catch (error) {
+    console.error('Error processing data:', error);
+    throw error;
+  }
+};

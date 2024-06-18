@@ -1,18 +1,18 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { searchWallet } from '../utils/api';
-import NFTDisplayGrid from './wallet-explorer-components/NFTDisplayGrid'
-import './wallet-explorer-components/NFTDisplayGrid.css';
+import CollectionDisplay from './browse-nfts/CollectionDisplay'
+import { searchCollection } from '../utils/api';
 
-const WalletExplorer = () => {
+const Browse = () => {
   const [output, setOutput] = useState([]);
-  const [walletAddress, setWalletAddress] = useState('');
+  const [collection, setCollection] = useState('');
   const [cursor, setCursor] = useState(null);
   const [hasMore, setHasMore] = useState(false);
   const [sort, setSort] = useState('');
+  const [renderCount, setRenderCount] = useState(0);
 
   const handleProcessData = useCallback(async (source) => {
-    if (source === 'search') {
-      if (walletAddress.length !== 42) {
+    if (source === 'search' || source === 'load') {
+      if (collection === null) {
         setOutput("400");
         return;
       }
@@ -21,16 +21,29 @@ const WalletExplorer = () => {
       setHasMore(false); // Reset hasMore when initiating a new search
     }
     try {
-      const data = { walletAddress, cursor, sort };
-      const response = await searchWallet(data);
+      const data = { collection, cursor, sort };
+      const response = await searchCollection(data);
       console.log('Processed data:', response);
       setCursor(response.next);
       setOutput((prevOutput) => [...prevOutput, ...response.output]);
       setHasMore(response.output.length >= 100);
     } catch (error) {
-      console.error('Error fetching NFTs:', error);
+      setOutput(["error"]);
+      console.error('Error fetching collections:', error);
     }
-  }, [walletAddress, cursor, sort, hasMore]);
+  }, [collection, cursor, sort, hasMore]);
+
+  useEffect(() => {
+    // Function to fetch data from the API
+    const fetchData = async () => {
+      try {
+        handleProcessData('load');
+      } catch (err) {
+        setOutput(["error"]);
+      }
+    };
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const handleScroll = async () => {
@@ -55,35 +68,24 @@ const WalletExplorer = () => {
 
   return (
     <main>
-      <p align="center">Enter wallet address to display NFTs in a wallet:</p>
       <form className="center" onSubmit={handleSubmit}>
         <input 
           type="text" 
-          value={walletAddress}
-          onChange={(e) => setWalletAddress(e.target.value)}
+          placeholder="Type to search collections..."
+          value={collection}
+          onChange={(e) => setCollection(e.target.value)}
         />
-
-        <select 
-          value={sort}
-          onChange={(e) => setSort(e.target.value)}
-        >
-          <option value="">Select sort (unsorted)</option>
-          <option value="cfp">Collection floor price (estimate)</option>
-          <option value="rr">Recently Received</option>
-          <option value="bo">Best Offer</option>
-          {/* Add more options as needed */}
-        </select>
 
         <button type="submit">Search</button>
       </form>
-      <NFTDisplayGrid content={output} />
+      <CollectionDisplay content={output} />
       {hasMore && (
-        <div className="load-more">
-          <p>Scroll to reveal more NFTs...</p>
-        </div>
+      <div className="load-more">
+        <p>Scroll to reveal more collections...</p>
+      </div>
       )}
     </main>
   );
 };
 
-export default WalletExplorer;
+export default Browse;

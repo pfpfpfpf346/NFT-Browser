@@ -8,6 +8,7 @@ import WalletExplorer from './components/wallet-explorer';
 import Guides from './components/guides';
 import PictureButton from './components/PictureButton';
 import AuthButton from './components/AuthButton';
+import Browse from './components/Browse';
 import { isAuthenticated } from './utils/auth';
 
 const PrivateRoute = ({ element, ...rest }) => {
@@ -32,6 +33,7 @@ function App() {
       
       <Routes>
         <Route path="/" element={<Home />} /> {/* Home page content */}
+        <Route path="/browse" element={<Browse />} /> {/* Login page content */}
         <Route path="/login" element={<Login />} /> {/* Login page content */}
         <Route path="/account" element={<PrivateRoute element={<Account />} />} /> {/* Account page content */}
         <Route path="/register" element={<Register />} />

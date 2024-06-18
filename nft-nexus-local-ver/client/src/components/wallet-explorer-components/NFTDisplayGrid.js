@@ -9,23 +9,6 @@ const testImageUrl = async (url) => {
   }
 };
 
-const getWorkingIpfsUrl = async (cid) => {
-  const gateways = [
-    `https://ipfs.io/ipfs/${cid}`,
-    `https://cloudflare-ipfs.com/ipfs/${cid}`,
-    `https://gateway.pinata.cloud/ipfs/${cid}`
-  ];
-
-  for (const gateway of gateways) {
-    const isWorking = await testImageUrl(gateway);
-    if (isWorking) {
-      return gateway;
-    }
-  }
-
-  return null;
-};
-
 const Results = ({ content }) => {
   const [images, setImages] = useState([]);
 

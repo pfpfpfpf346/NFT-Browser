@@ -110,5 +110,18 @@ def search_wallet():
     }
     return jsonify(processed_data)
 
+
+
+@app.route('/search-collection', methods=['POST'])
+def search_collection():
+    data = request.get_json()
+    processed_data = {
+        'message': 'Data processed successfully',
+        'input_data': "test",
+        'output': [data],
+        'next': "next"
+    }
+    return jsonify(processed_data)
+
 if __name__ == '__main__':
     app.run(port=5001)
