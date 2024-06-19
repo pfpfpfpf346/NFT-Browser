@@ -8,7 +8,7 @@ const Browse = () => {
   const [collection, setCollection] = useState('');
   const [cursor, setCursor] = useState(null);
   const [hasMore, setHasMore] = useState(false);
-  const [sort, setSort] = useState('seven_day_volume');
+  const [sort, setSort] = useState('');
   const [interval, setInterval] = useState('1');
   const fetchDataCalledRef = useRef(false); // Ref to prevent duplicate fetching
 
@@ -27,7 +27,12 @@ const Browse = () => {
       const response = await searchCollection(data);
       console.log('Processed data:', response);
       setCursor(response.next);
-      setOutput((prevOutput) => [...prevOutput, ...response.output]);
+      if (source === 'search' || source === 'load') {
+        setOutput((prevOutput) => [...prevOutput, ...response.output]);
+      } else {
+        setOutput((prevOutput) => [...prevOutput, ...response.output.slice(1)]);
+      }
+      
       setHasMore(response.output.length >= 20);
     } catch (error) {
       setOutput(["error"]);
@@ -79,8 +84,28 @@ const Browse = () => {
             type="text" 
             placeholder="Type to search collections..."
             value={collection}
-            onChange={(e) => setCollection(e.target.value)}
+            onChange={(e) => {
+                setCollection(e.target.value);
+                setHasMore(false);
+              }
+            }
           />
+          <select 
+          value={sort}
+          onChange={(e) => {
+            setSort(e.target.value);
+            setHasMore(false);
+            }
+          }
+        >
+          <option value="">Select sort...</option>
+          <option value="created_date">Created Date</option>
+          <option value="market_cap">Market Cap</option>
+          <option value="num_owners">Number of Owners</option>
+          <option value="one_day_change">1-Day Change</option>
+          <option value="seven_day_change">7-Day Change</option>
+          <option value="seven_day_volume">7-Day Volume</option>
+        </select>
           <button type="submit">Search</button>
         </form>
         <p>Select interval:</p>

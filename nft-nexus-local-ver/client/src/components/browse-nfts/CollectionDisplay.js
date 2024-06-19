@@ -21,6 +21,7 @@ const Results = ({ content, interval }) => {
       console.log(output);
 
       const columns = [
+        { header: 'No.' },
         { header: 'Collection' },
         { header: 'Type'},
         { header: 'Floor Price' },
@@ -52,6 +53,7 @@ const Results = ({ content, interval }) => {
             <tbody>
               {output.map((row, rowIndex) => (
                 <tr key={rowIndex}>
+                  <td>{rowIndex + 1}</td>
                   <td>
                     <div class="collection">
                       <img class="colle_icon" src={row[2]} alt={row[0]} />

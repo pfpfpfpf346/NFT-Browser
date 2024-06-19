@@ -160,7 +160,10 @@ def search_collection():
     data = request.get_json()
     collection = data['collection']
     cursor = data['cursor']
-    sort = data['sort']
+    if data['sort'] == '':
+        sort = "seven_day_volume"
+    else:
+        sort = data['sort']
     (collections, next) = get_collections(collection, cursor, sort)
     collections_processed = additional_info(collections)
     processed_data = {
