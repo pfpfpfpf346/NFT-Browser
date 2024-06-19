@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const Results = ({ content }) => {
-  const [images, setImages] = useState([]);
+const Results = ({ content, interval }) => {
 
   if (content.length === 0) {
     return (
@@ -22,10 +21,23 @@ const Results = ({ content }) => {
       console.log(output);
 
       const columns = [
-        { header: 'Name', accessor: 'name' },
-        { header: 'Age', accessor: 'age' },
-        { header: 'Email', accessor: 'email' },
+        { header: 'Collection' },
+        { header: 'Type'},
+        { header: 'Floor Price' },
+        { header: 'Market Cap', accessor: 'market-cap' },
+        { header: 'No. of Sales' },
+        { header: 'Volume' },
+        { header: 'Volume % Chg.' }
       ];
+      
+      var i = 0;
+      if (interval === '1') {
+        i = 0;
+      } else if (interval === '7') {
+        i = 1;
+      } else if (interval === '30') {
+        i = 2;
+      }
 
       return (
         <div className="table-container">
@@ -40,9 +52,19 @@ const Results = ({ content }) => {
             <tbody>
               {output.map((row, rowIndex) => (
                 <tr key={rowIndex}>
-                  <td>{row["collection"]}</td>
-                  <td>{row["cursor"]}</td>
-                  <td>{row["sort"]}</td>
+                  <td>
+                    <div class="collection">
+                      <img class="colle_icon" src={row[2]} alt={row[0]} />
+                      <a href={row[4]} target="_blank" rel="noopener noreferrer">{row[0]}</a>
+                    </div>
+                  </td>
+                  <td>{row[3] ? row[3] : "--"}</td>
+                  <td>{row[5]["floor_price"] > 0 ? String(Math.round(row[5]["floor_price"] * 1000) / 1000) +
+                    " ETH" : "--"}</td>
+                  <td>{String(Math.round(row[5]["market_cap"])) + " ETH"}</td>
+                  <td>{row[6][i]['sales']}</td>
+                  <td>{String(Math.round(row[6][i]['volume'] * 100) / 100) + " ETH"}</td>
+                  <td>{String(Math.round(row[6][i]['volume_change'] * 1000) / 10) + "%"}</td>
                 </tr>
               ))}
             </tbody>

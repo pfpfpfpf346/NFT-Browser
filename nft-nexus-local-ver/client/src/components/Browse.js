@@ -1,18 +1,20 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import CollectionDisplay from './browse-nfts/CollectionDisplay'
 import { searchCollection } from '../utils/api';
+import './browse-nfts/CollectionDisplay.css';
 
 const Browse = () => {
   const [output, setOutput] = useState([]);
   const [collection, setCollection] = useState('');
   const [cursor, setCursor] = useState(null);
   const [hasMore, setHasMore] = useState(false);
-  const [sort, setSort] = useState('');
-  const [renderCount, setRenderCount] = useState(0);
+  const [sort, setSort] = useState('seven_day_volume');
+  const [interval, setInterval] = useState('1');
+  const fetchDataCalledRef = useRef(false); // Ref to prevent duplicate fetching
 
   const handleProcessData = useCallback(async (source) => {
     if (source === 'search' || source === 'load') {
-      if (collection === null) {
+      if (false) {
         setOutput("400");
         return;
       }
@@ -26,7 +28,7 @@ const Browse = () => {
       console.log('Processed data:', response);
       setCursor(response.next);
       setOutput((prevOutput) => [...prevOutput, ...response.output]);
-      setHasMore(response.output.length >= 100);
+      setHasMore(response.output.length >= 20);
     } catch (error) {
       setOutput(["error"]);
       console.error('Error fetching collections:', error);
@@ -36,12 +38,15 @@ const Browse = () => {
   useEffect(() => {
     // Function to fetch data from the API
     const fetchData = async () => {
-      try {
-        handleProcessData('load');
-      } catch (err) {
-        setOutput(["error"]);
-      }
-    };
+      if (!fetchDataCalledRef.current) {
+        fetchDataCalledRef.current = true;
+        try {
+          handleProcessData('load');
+        } catch (err) {
+          setOutput(["error"]);
+        }
+      };
+    }
     fetchData();
   }, []);
 
@@ -68,17 +73,28 @@ const Browse = () => {
 
   return (
     <main>
-      <form className="center" onSubmit={handleSubmit}>
-        <input 
-          type="text" 
-          placeholder="Type to search collections..."
-          value={collection}
-          onChange={(e) => setCollection(e.target.value)}
-        />
-
-        <button type="submit">Search</button>
-      </form>
-      <CollectionDisplay content={output} />
+      <div class="header">
+        <form className="center" onSubmit={handleSubmit}>
+          <input 
+            type="text" 
+            placeholder="Type to search collections..."
+            value={collection}
+            onChange={(e) => setCollection(e.target.value)}
+          />
+          <button type="submit">Search</button>
+        </form>
+        <p>Select interval:</p>
+        <select 
+          value={interval}
+          onChange={(e) => setInterval(e.target.value)}
+        >
+          <option value="1">1 day</option>
+          <option value="7">7 day</option>
+          <option value="30">30 day</option>
+        </select>
+      </div>
+      
+      <CollectionDisplay content={output} interval={interval}/>
       {hasMore && (
       <div className="load-more">
         <p>Scroll to reveal more collections...</p>

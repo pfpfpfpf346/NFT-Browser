@@ -16,7 +16,9 @@ opensea_headers = {
     "X-API-KEY": opensea_api_key
 }
 
-def iterate_get_nfts(nfts_raw): # iterate getting sale value out of json
+# get nft from account api
+
+def iterate_get_nfts(nfts_raw): # iterate getting nft out of json
     out = []
     for nft in nfts_raw:
         collection = nft["contract"]
@@ -27,7 +29,7 @@ def iterate_get_nfts(nfts_raw): # iterate getting sale value out of json
         out.append([collection, identifier, token_standard, name, opensea_url]) # nft_data
     return out
 
-def get_nfts_acc(acc, cursor, iter, order_dir, order_by): # get sale data
+def get_nfts_acc(acc, cursor, iter, order_dir, order_by): # get nfts from acc
     if cursor:
         url = f"https://api.opensea.io/api/v2/chain/ethereum/account/{acc}/nfts?limit=100&next={cursor}"
     else:
@@ -110,16 +112,62 @@ def search_wallet():
     }
     return jsonify(processed_data)
 
+# get collections api
 
+def iterate_get_collections(collections_raw): # iterate getting account out of json
+    out = []
+    for collection in collections_raw:
+        name = collection["name"]
+        slug = collection["collection"]
+        image = collection["image_url"]
+        category = collection["category"]
+        opensea_url = collection["opensea_url"]
+        out.append([name, slug, image, category, opensea_url]) # nft_data
+    return out
+
+def get_collections(collection, cursor, sort): # get collections
+    if cursor:
+        url = f"https://api.opensea.io/api/v2/collections?chain=ethereum&limit=20&next={cursor}&order_by={sort}"
+    else:
+        collections = []
+        url = f"https://api.opensea.io/api/v2/collections?chain=ethereum&limit=20&order_by={sort}"
+    print(url)
+    response = requests.get(url, headers=opensea_headers)
+    print("get collections code:", response.status_code)
+    data = response.json()
+    if 'next' in data:
+        next = data['next']
+    else:
+        next = False
+    collections_raw = data['collections']
+    collections = iterate_get_collections(collections_raw)
+    return (collections, next)
+
+def additional_info(collections):
+    out = []
+    for collection in collections:
+        slug = collection[1]
+        url = f"https://api.opensea.io/api/v2/collections/{slug}/stats"
+        print(url)
+        response = requests.get(url, headers=opensea_headers)
+        print("get collections addi_info code:", response.status_code)
+        data = response.json()
+        out.append(collection + [data["total"], data["intervals"]])
+    return out
 
 @app.route('/search-collection', methods=['POST'])
 def search_collection():
     data = request.get_json()
+    collection = data['collection']
+    cursor = data['cursor']
+    sort = data['sort']
+    (collections, next) = get_collections(collection, cursor, sort)
+    collections_processed = additional_info(collections)
     processed_data = {
         'message': 'Data processed successfully',
         'input_data': "test",
-        'output': [data],
-        'next': "next"
+        'output': collections_processed,
+        'next': next
     }
     return jsonify(processed_data)
 
