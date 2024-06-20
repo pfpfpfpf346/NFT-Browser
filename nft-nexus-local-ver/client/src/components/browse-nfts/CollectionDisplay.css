@@ -14,9 +14,19 @@
 .header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   margin: 0 20px;
 }
 
 .table-container {
   margin: 0 20px;
+}
+
+.header input {
+  width: 500px;
+}
+
+.interval {
+  display: flex;
+  align-items: center;
 }

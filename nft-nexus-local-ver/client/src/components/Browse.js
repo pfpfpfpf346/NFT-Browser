@@ -10,17 +10,21 @@ const Browse = () => {
   const [hasMore, setHasMore] = useState(false);
   const [sort, setSort] = useState('');
   const [interval, setInterval] = useState('1');
+  const [resultsType, setResultsType] = useState('load');
+  const [status, setStatus] = useState(null);
   const fetchDataCalledRef = useRef(false); // Ref to prevent duplicate fetching
 
   const handleProcessData = useCallback(async (source) => {
     if (source === 'search' || source === 'load') {
-      if (false) {
-        setOutput("400");
-        return;
+      if (source === 'search') {
+        setResultsType('search')
       }
       setOutput([]); // Clear the current output when initiating a new search
       setCursor(null); // Reset the cursor when initiating a new search
       setHasMore(false); // Reset hasMore when initiating a new search
+      setStatus('loading');
+    } else {
+      setStatus('loading-more');
     }
     try {
       const data = { collection, cursor, sort };
@@ -32,13 +36,13 @@ const Browse = () => {
       } else {
         setOutput((prevOutput) => [...prevOutput, ...response.output.slice(1)]);
       }
-      
-      setHasMore(response.output.length >= 20);
+      setHasMore(cursor ? true : false);
+      setStatus('200');
     } catch (error) {
-      setOutput(["error"]);
+      setStatus('500');
       console.error('Error fetching collections:', error);
     }
-  }, [collection, cursor, sort, hasMore]);
+  }, [collection, cursor, sort, hasMore, resultsType, status]);
 
   useEffect(() => {
     // Function to fetch data from the API
@@ -61,7 +65,9 @@ const Browse = () => {
       if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight || !hasMore) return;
       
       // If the user has scrolled to the bottom and there are more NFTs to load, load more NFTs
-      await handleProcessData('scroll');
+      if (status === '200') {
+        await handleProcessData('scroll');
+      }
     };
 
     // Add the scroll event listener to the window object
@@ -82,7 +88,7 @@ const Browse = () => {
         <form className="center" onSubmit={handleSubmit}>
           <input 
             type="text" 
-            placeholder="Type to search collections..."
+            placeholder="Type to search collections or leave empty to search all..."
             value={collection}
             onChange={(e) => {
                 setCollection(e.target.value);
@@ -98,31 +104,35 @@ const Browse = () => {
             }
           }
         >
-          <option value="">Select sort...</option>
-          <option value="created_date">Created Date</option>
+          <option value="">Select sort... (only works with search-all)</option>
           <option value="market_cap">Market Cap</option>
           <option value="num_owners">Number of Owners</option>
           <option value="one_day_change">1-Day Change</option>
           <option value="seven_day_change">7-Day Change</option>
           <option value="seven_day_volume">7-Day Volume</option>
         </select>
-          <button type="submit">Search</button>
+          <button type="submit" 
+          disabled={status === "loading" || status === "loading-more"}>
+            Search
+          </button>
         </form>
-        <p>Select interval:</p>
-        <select 
-          value={interval}
-          onChange={(e) => setInterval(e.target.value)}
-        >
-          <option value="1">1 day</option>
-          <option value="7">7 day</option>
-          <option value="30">30 day</option>
-        </select>
+        <div class="interval">
+          <p>Select interval:</p>
+          <select
+            value={interval}
+            onChange={(e) => setInterval(e.target.value)}
+          >
+            <option value="1">1 day</option>
+            <option value="7">7 day</option>
+            <option value="30">30 day</option>
+          </select>
+        </div>
       </div>
       
-      <CollectionDisplay content={output} interval={interval}/>
+      <CollectionDisplay content={output} interval={interval} resultsType={resultsType} status={status}/>
       {hasMore && (
       <div className="load-more">
-        <p>Scroll to reveal more collections...</p>
+        {status === "loading-more" ? <p>Loading...</p> : <p>Scroll to reveal more collections...</p>}
       </div>
       )}
     </main>

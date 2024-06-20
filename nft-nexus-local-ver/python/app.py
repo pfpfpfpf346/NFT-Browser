@@ -16,6 +16,8 @@ opensea_headers = {
     "X-API-KEY": opensea_api_key
 }
 
+alchemy_headers = {"accept": "application/json"}
+
 # get nft from account api
 
 def iterate_get_nfts(nfts_raw): # iterate getting nft out of json
@@ -114,18 +116,7 @@ def search_wallet():
 
 # get collections api
 
-def iterate_get_collections(collections_raw): # iterate getting account out of json
-    out = []
-    for collection in collections_raw:
-        name = collection["name"]
-        slug = collection["collection"]
-        image = collection["image_url"]
-        category = collection["category"]
-        opensea_url = collection["opensea_url"]
-        out.append([name, slug, image, category, opensea_url]) # nft_data
-    return out
-
-def get_collections(collection, cursor, sort): # get collections
+def load_collections(cursor, sort): # get collections
     if cursor:
         url = f"https://api.opensea.io/api/v2/collections?chain=ethereum&limit=20&next={cursor}&order_by={sort}"
     else:
@@ -133,14 +124,42 @@ def get_collections(collection, cursor, sort): # get collections
         url = f"https://api.opensea.io/api/v2/collections?chain=ethereum&limit=20&order_by={sort}"
     print(url)
     response = requests.get(url, headers=opensea_headers)
-    print("get collections code:", response.status_code)
+    print("load collections code:", response.status_code)
     data = response.json()
     if 'next' in data:
         next = data['next']
     else:
         next = False
     collections_raw = data['collections']
-    collections = iterate_get_collections(collections_raw)
+    collections = []
+    for collection in collections_raw:
+        name = collection["name"]
+        slug = collection["collection"]
+        image = collection["image_url"]
+        category = collection["category"]
+        opensea_url = collection["opensea_url"]
+        collections.append([name, slug, image, category, opensea_url]) # nft_data
+    return (collections, next)
+
+def search_collections(collection, cursor, sort): # get collections
+    if cursor:
+        url = f"https://eth-mainnet.g.alchemy.com/nft/v3/{alchemy_api_key}/searchContractMetadata?query={collection}"
+    else:
+        url = f"https://eth-mainnet.g.alchemy.com/nft/v3/{alchemy_api_key}/searchContractMetadata?query={collection}"
+    print(url)
+    response = requests.get(url, headers=alchemy_headers)
+    print("search collections code:", response.status_code)
+    data = response.json()
+    next = False
+    collections_raw = data['contracts']
+    collections = []
+    for collection in collections_raw:
+        opensea_metadata = collection["openSeaMetadata"]
+        name = opensea_metadata["collectionName"]
+        slug = opensea_metadata["collectionSlug"]
+        image = opensea_metadata["imageUrl"]
+        supply = collection["totalSupply"]
+        collections.append([name, slug, image, supply, None]) # nft_data
     return (collections, next)
 
 def additional_info(collections):
@@ -156,7 +175,7 @@ def additional_info(collections):
     return out
 
 @app.route('/search-collection', methods=['POST'])
-def search_collection():
+def load_collection():
     data = request.get_json()
     collection = data['collection']
     cursor = data['cursor']
@@ -164,7 +183,10 @@ def search_collection():
         sort = "seven_day_volume"
     else:
         sort = data['sort']
-    (collections, next) = get_collections(collection, cursor, sort)
+    if collection:
+        (collections, next) = search_collections(collection, cursor, sort)
+    else:
+        (collections, next) = load_collections(cursor, sort)
     collections_processed = additional_info(collections)
     processed_data = {
         'message': 'Data processed successfully',

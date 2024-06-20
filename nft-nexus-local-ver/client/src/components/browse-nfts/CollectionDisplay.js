@@ -1,18 +1,33 @@
 import React, { useState, useEffect } from 'react';
 
-const Results = ({ content, interval }) => {
+const Results = ({ content, interval, resultsType, status }) => {
 
-  if (content.length === 0) {
+  const getColor = (value) => {
+    if (value > 0) return 'green';
+    if (value < 0) return 'red';
+    return 'black';
+  };
+
+  const numberStyle = (num) => ({
+    color: getColor(num)
+  });
+
+  if (status === null) {
     return (
       <p>null</p>
     )
-  } else if (content === "400") {
+  } else if (status === "loading") {
+    return (
+      <p>Loading...</p>
+    )
+  }
+   else if (status === "400") {
     return (
       <p>invalid input</p>
     )
-  } else if (content === "error") {
+  } else if (status === "500") {
     return (
-      <p>error</p>
+      <p>internal error</p>
     )
   }
   else {
@@ -23,7 +38,7 @@ const Results = ({ content, interval }) => {
       const columns = [
         { header: 'No.' },
         { header: 'Collection' },
-        { header: 'Type'},
+        { header: (resultsType === 'load' ? 'Type' : 'Supply')},
         { header: 'Floor Price' },
         { header: 'Market Cap', accessor: 'market-cap' },
         { header: 'No. of Sales' },
@@ -66,7 +81,11 @@ const Results = ({ content, interval }) => {
                   <td>{String(Math.round(row[5]["market_cap"])) + " ETH"}</td>
                   <td>{row[6][i]['sales']}</td>
                   <td>{String(Math.round(row[6][i]['volume'] * 100) / 100) + " ETH"}</td>
-                  <td>{String(Math.round(row[6][i]['volume_change'] * 1000) / 10) + "%"}</td>
+                  <td>
+                    <p style={numberStyle(row[6][i]['volume_change'])}>
+                      {String(Math.round(row[6][i]['volume_change'] * 1000) / 10) + "%"}
+                    </p>
+                  </td>
                 </tr>
               ))}
             </tbody>
