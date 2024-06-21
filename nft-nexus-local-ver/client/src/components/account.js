@@ -2,6 +2,11 @@
   import axios from 'axios';
   import { useNavigate } from 'react-router-dom';
   import { getToken, isAuthenticated } from '../utils/auth';
+  import "./account.css"
+  import Dashboard from './account/dashboard';
+  import Owned_NFTs from './account/owned-nfts';
+  import Favourites from './account/favourites';
+  import Settings from './account/settings';
 
   const Account = () => {
     const [user, setUser] = useState(null);
@@ -32,40 +37,35 @@
 
     if (!user) return <div>Loading...</div>;
 
-    const renderContent = () => {
+    const RenderContent = () => {
       switch (content) {
         case 'dashboard':
           return <Dashboard />;
         case 'owned-nfts':
           return <Owned_NFTs />;
+        case 'favourites':
+          return <Favourites />;
+        case 'settings':
+          return <Settings />;
         default:
           return <Dashboard />;
       }
     };
 
     return (
-      <div class="account-header">
-        <h1 class='account-info'>Welcome, {user ? user.username : '<undefined>'}!</h1> {/* Display username */}
-        <button class='account-buttons' onClick={() => setContent('dashboard')}>Account Dashboard</button>
-        <button class='account-buttons' onClick={() => setContent('owned-nfts')}>Owned NFTs</button>
-        <button class='account-buttons'>Favourites</button>
-        <button class='account-buttons'>Settings</button>
-      </div>
+      <main>
+        <div class="account-header">
+          <h1 class='account-info'>Welcome, {user ? user.username : '<undefined>'}!</h1> {/* Display username */}
+          <button class='account-buttons' onClick={() => setContent('dashboard')}>Account Dashboard</button>
+          <button class='account-buttons' onClick={() => setContent('owned-nfts')}>Owned NFTs</button>
+          <button class='account-buttons' onClick={() => setContent('favourites')}>Favourites</button>
+          <button class='account-buttons' onClick={() => setContent('settings')}>Settings</button>
+        </div>
+        <div class="content">
+          <RenderContent />
+        </div>
+      </main>
     );
   };
 
-  const Dashboard = () => (
-    <div>
-      <h1>Dashboard</h1>
-      <p>This is the Dashboard content.</p>
-    </div>
-  );
-
-  const Owned_NFTs = () => (
-    <div>
-      <h1>Dashboard</h1>
-      <p>This is the Owned NFTs content.</p>
-    </div>
-  );
-
-  export default Account;
+export default Account;
