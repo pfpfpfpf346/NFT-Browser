@@ -31,16 +31,18 @@ function App() {
         </nav>
       </header>
       
-      <Routes>
-        <Route path="/" element={<Home />} /> {/* Home page content */}
-        <Route path="/browse" element={<Browse />} /> {/* Login page content */}
-        <Route path="/login" element={<Login />} /> {/* Login page content */}
-        <Route path="/account" element={<PrivateRoute element={<Account />} />} /> {/* Account page content */}
-        <Route path="/register" element={<Register />} />
-        <Route path="/wallet-explorer" element={<WalletExplorer />} />
-        <Route path="/guides" element={<Guides />} />
-        <Route path="*" element={<Navigate to="/" />} /> {/* Redirect unknown routes to home */}
-      </Routes>
+      <div class="main-body">
+        <Routes>
+          <Route path="/" element={<Home />} /> {/* Home page content */}
+          <Route path="/browse" element={<Browse />} /> {/* Login page content */}
+          <Route path="/login" element={<Login />} /> {/* Login page content */}
+          <Route path="/account" element={<PrivateRoute element={<Account />} />} /> {/* Account page content */}
+          <Route path="/register" element={<Register />} />
+          <Route path="/wallet-explorer" element={<WalletExplorer />} />
+          <Route path="/guides" element={<Guides />} />
+          <Route path="*" element={<Navigate to="/" />} /> {/* Redirect unknown routes to home */}
+        </Routes>
+      </div>
     </div>
   );
 }
