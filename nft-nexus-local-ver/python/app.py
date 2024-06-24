@@ -31,7 +31,7 @@ def iterate_get_nfts(nfts_raw): # iterate getting nft out of json
         out.append([collection, identifier, token_standard, name, opensea_url]) # nft_data
     return out
 
-def get_nfts_acc(acc, cursor, iter, order_dir, order_by): # get nfts from acc
+def get_nfts_acc(acc, cursor, order_dir, order_by): # get nfts from acc
     if cursor:
         url = f"https://api.opensea.io/api/v2/chain/ethereum/account/{acc}/nfts?limit=100&next={cursor}"
     else:

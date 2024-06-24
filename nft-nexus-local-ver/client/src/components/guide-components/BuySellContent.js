@@ -24,8 +24,12 @@ const BuySellContent = () => {
       <h2>Buying NFTs (step-by-step)</h2>
       <h3>1. Browsing</h3>
       <p>Using this website's "Browse NFTs" feature (located on the top right of the toolbar), one can easily browse for a wide variety of NFTs to buy.</p>
-      <h3>Select an NFT</h3>
-      <p>Once you have decided on an NFT to buy, you can go to its Opensea link in order to purchase it</p>
+      <h3>2. Select an NFT</h3>
+      <p>Once you have decided on an NFT to buy, you can go to its Opensea link in order to purchase it.</p>
+      <h3>3. Purchase</h3>
+      <p>If the NFT is listed for a fixed price, click "Buy Now" and confirm the transaction in your wallet.</p>
+      <h3>4. Approve the transaction</h3>
+      <p>Pay a transaction fee to confirm the purchase.</p>
     </div>
   );
 };
