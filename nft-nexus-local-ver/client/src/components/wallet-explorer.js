@@ -8,7 +8,7 @@ const WalletExplorer = () => {
   const [walletAddress, setWalletAddress] = useState('');
   const [cursor, setCursor] = useState(null);
   const [hasMore, setHasMore] = useState(false);
-  const [mode, setMode] = useState('');
+  const [mode, setMode] = useState('default');
 
   const handleProcessData = useCallback(async (source) => {
     if (source === 'search') {
@@ -67,14 +67,14 @@ const WalletExplorer = () => {
           value={mode}
           onChange={(e) => setMode(e.target.value)}
         >
-          <option value="">Select NFTs to view</option>
-          <option value="ev">Everything</option>
-          <option value="al">Active listing</option>
+          <option value="default">View NFTs:</option>
+          <option value="every">Everything</option>
+          <option value="listed">Listed NFTs only</option>
         </select>
 
         <button type="submit">Search</button>
       </form>
-      <NFTDisplayGrid content={output} />
+      <NFTDisplayGrid content={output} mode={mode} />
       {hasMore && (
         <div className="load-more">
           <p>Scroll to reveal more NFTs...</p>
