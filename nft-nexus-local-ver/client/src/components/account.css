@@ -1,4 +1,5 @@
 .account-header {
+    padding: 1px 0px;
     background-color: #f0f0f0; /* Optional: background color */
     font-family: Arial, sans-serif; /* Optional: font style */
     border-bottom: 1px solid grey; /* Bottom border only */
@@ -7,19 +8,19 @@
 .account-info {
     position: relative; /* Position absolutely within the container */
     top: 10px; /* Position from the top */
-    margin-left: 10px;
+    margin-left: 20px;
 }
 
 .account-buttons {
     cursor: pointer;
     color: #7f7f7f;
     text-decoration: none;
-    padding: 8px 16px;
+    padding: 8px 20px;
     border: 0px;
     transition: #7f7f7f 0.3s ease;
 }
 
 main {
-    margin-left: 20px; /* Space outside the frame */
-    margin-right: 20px; /* Space outside the frame */
+    margin-left: 20px;
+    margin-right: 20px;
 }

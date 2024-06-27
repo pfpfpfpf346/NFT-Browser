@@ -72,3 +72,33 @@
 {"level":"info","message":"hello world!"}
 {"level":"info","message":"hello world!"}
 {"level":"info","message":"pool query"}
+{"level":"info","message":"hello world!"}
+{"level":"info","message":"hello world!"}
+{"level":"info","message":"pool query"}
+{"level":"info","message":"pool query"}
+{"level":"info","message":"pool query"}
+{"level":"info","message":"hello world!"}
+{"level":"info","message":"hello world!"}
+{"level":"info","message":"fn start"}
+{"level":"info","message":{"yourWalletAddress":"0x0"}}
+{"level":"info","message":"pool query ok"}
+{"level":"info","message":"hello world!"}
+{"level":"info","message":"pool query"}
+{"level":"info","message":{"yourWalletAddress":"0x0"}}
+{"level":"info","message":4}
+{"level":"info","message":"pool query ok"}
+{"level":"info","message":"hello world!"}
+{"level":"info","message":{"yourWalletAddress":"0x0"}}
+{"level":"info","message":4}
+{"level":"info","message":"pool query ok"}
+{"level":"info","message":0}
+{"level":"info","message":{"yourWalletAddress":"0x0"}}
+{"level":"info","message":4}
+{"level":"info","message":"pool query ok"}
+{"level":"info","message":0}
+{"level":"info","message":"all ok"}
+{"level":"info","message":{"yourWalletAddress":"0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"}}
+{"level":"info","message":4}
+{"level":"info","message":"pool query ok"}
+{"level":"info","message":1}
+{"level":"info","message":"all ok"}
