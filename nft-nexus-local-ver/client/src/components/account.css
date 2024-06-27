@@ -20,6 +20,16 @@
     transition: #7f7f7f 0.3s ease;
 }
 
+.account-basic-info {
+    display: flex;
+}
+
+.account-wallet {
+    position: relative;
+    left: 10px;
+    top: 30px;
+}
+
 main {
     margin-left: 20px;
     margin-right: 20px;

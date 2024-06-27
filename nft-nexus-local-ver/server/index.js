@@ -80,11 +80,18 @@ app.post('/process-data', authenticateToken, async (req, res) => {
 app.get('/api/account', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.userId; // id in users
-    const result = await pool.query('SELECT * FROM users WHERE id = $1', [userId]);
-    if (result.rows.length === 0) {
+    const username = await pool.query('SELECT * FROM users WHERE id = $1', [userId]);
+    if (username.rows.length === 0) {
       return res.status(404).json({ error: 'User not found' });
     }
-    res.json(result.rows[0]);
+    const address = await pool.query('SELECT * FROM settings WHERE user_id = $1 AND setting_key = $2',
+      [userId, 'wallet-address']);
+    if (address.rows.length === 0) {
+      res.json({username: username.rows[0].username, address: null});
+    } else {
+      res.json({username: username.rows[0].username, address: address.rows[0].setting_value});
+    }
+    
   } catch (err) {
     res.status(400).json({ error: err.message });
   }

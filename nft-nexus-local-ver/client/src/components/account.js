@@ -10,6 +10,7 @@
 
   const Account = () => {
     const [user, setUser] = useState(null);
+    const [address, setAddress] = useState(null);
     const navigate = useNavigate();
     const [content, setContent] = useState('home');
 
@@ -55,7 +56,10 @@
     return (
       <main>
         <div class="account-header">
-          <h1 class='account-info'>Welcome, {user ? user.username : '<undefined>'}!</h1> {/* Display username */}
+          <div class="account-basic-info">
+            <h1 class='account-info'>Welcome, {user.username ? user.username : '<undefined>'}!</h1> {/* Display username */}
+            <p class='account-wallet'>Address: {user.address ? user.address : 'Not Set'}</p>
+          </div>
           <button class='account-buttons' onClick={() => setContent('dashboard')}>Account Dashboard</button>
           <button class='account-buttons' onClick={() => setContent('owned-nfts')}>Owned NFTs</button>
           <button class='account-buttons' onClick={() => setContent('favourites')}>Favourites</button>
