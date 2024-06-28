@@ -42,7 +42,7 @@
     const RenderContent = () => {
       switch (content) {
         case 'dashboard':
-          return <Dashboard />;
+          return <Dashboard walletAddress={address} />;
         case 'owned-nfts':
           return <Owned_NFTs walletAddress={address} />;
         case 'favourites':
@@ -50,7 +50,7 @@
         case 'settings':
           return <Settings />;
         default:
-          return <Dashboard />;
+          return <Dashboard walletAddress={address} />;
       }
     };
 

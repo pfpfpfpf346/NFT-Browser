@@ -232,5 +232,33 @@ def load_collection():
     }
     return jsonify(processed_data)
 
+# load account dashboard
+
+@app.route('/wallet-stats', methods=['POST'])
+def load_wallet():
+    input_data = request.get_json()
+    wallet_address = input_data['walletAddress']['walletAddress']
+    url = f"https://eth-mainnet.g.alchemy.com/v2/{alchemy_api_key}"
+    payload = {
+        "id": 1,
+        "jsonrpc": "2.0",
+        "params": [wallet_address, "latest"],
+        "method": "eth_getBalance"
+    }
+    headers = {
+        "accept": "application/json",
+        "content-type": "application/json"
+    }
+    response = requests.post(url, json=payload, headers=headers)
+    raw_data = response.json()
+    print(raw_data)
+    processed_data = {
+        'message': 'Data processed successfully',
+        'input_data': [wallet_address],
+        'output': int(raw_data["result"], 16) / 10**18
+    }
+    return jsonify(processed_data)
+
+
 if __name__ == '__main__':
     app.run(port=5001)

@@ -24,3 +24,13 @@ export const searchCollection = async (data) => {
     throw error;
   }
 };
+
+export const walletStats = async (data) => {
+  try {
+    const response = await api.post('/wallet-stats', (data));
+    return response.data;
+  } catch (error) {
+    console.error('Error processing data:', error);
+    throw error;
+  }
+};
