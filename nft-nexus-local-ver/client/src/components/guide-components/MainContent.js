@@ -1,6 +1,7 @@
 // src/components/MainContent.js
 import React from 'react';
 import HomeContent from './HomeContent';
+import IntroNFTContent from './IntroNFTContent';
 import WalletContent from './WalletContent';
 import BuySellContent from './BuySellContent';
 
@@ -10,6 +11,9 @@ const MainContent = ({ content }) => {
   switch (content) {
     case 'Home':
       Component = HomeContent;
+      break;
+    case 'IntroNFT':
+      Component = IntroNFTContent;
       break;
     case 'Wallet':
       Component = WalletContent;
@@ -22,7 +26,7 @@ const MainContent = ({ content }) => {
   }
 
   return (
-    <div className="body">
+    <div className="guide-body">
       <Component />
     </div>
   );

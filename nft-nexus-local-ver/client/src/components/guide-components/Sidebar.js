@@ -6,7 +6,8 @@ const Sidebar = ({ onSidebarClick }) => {
       <h2>Contents</h2>
       <div className='sidebar-buttons'>
         <button onClick={() => onSidebarClick('Homepage')}>Homepage</button>
-        <button onClick={() => onSidebarClick('Wallet')}>Setting up wallet</button>
+        <button onClick={() => onSidebarClick('IntroNFT')}>Intro to NFTs</button>
+        <button onClick={() => onSidebarClick('Wallet')}>Guide to Wallets</button>
         <button onClick={() => onSidebarClick('BuySell')}>Buying and selling NFTs</button>
       </div>
     </div>
