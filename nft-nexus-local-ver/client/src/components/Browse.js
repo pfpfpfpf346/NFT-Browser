@@ -6,7 +6,7 @@ import './browse-nfts/CollectionDisplay.css';
 const Browse = () => {
   const [output, setOutput] = useState([]);
   const [collection, setCollection] = useState('');
-  const [cursor, setCursor] = useState(null);
+  const cursorRef = useRef(null); // Ref to keep track of the cursor
   const [hasMore, setHasMore] = useState(false);
   const [sort, setSort] = useState('');
   const [interval, setInterval] = useState('1');
@@ -16,33 +16,32 @@ const Browse = () => {
 
   const handleProcessData = useCallback(async (source) => {
     if (source === 'search' || source === 'load') {
-      if (source === 'search') {
-        setResultsType('search')
-      }
+      setResultsType(source);
       setOutput([]); // Clear the current output when initiating a new search
-      setCursor(null); // Reset the cursor when initiating a new search
+      cursorRef.current = null; // Reset the cursor when initiating a new search
       setHasMore(false); // Reset hasMore when initiating a new search
       setStatus('loading');
     } else {
       setStatus('loading-more');
     }
     try {
-      const data = { collection, cursor, sort };
+      const data = { collection, cursor: cursorRef.current, sort };
       const response = await searchCollection(data);
       console.log('Processed data:', response);
-      setCursor(response.next);
       if (source === 'search' || source === 'load') {
         setOutput((prevOutput) => [...prevOutput, ...response.output]);
       } else {
         setOutput((prevOutput) => [...prevOutput, ...response.output.slice(1)]);
       }
-      setHasMore(cursor ? true : false);
+      cursorRef.current = response.next; // Update the cursor reference
+      console.log(response.next);
+      setHasMore(response.next !== null);
       setStatus('200');
     } catch (error) {
       setStatus('500');
       console.error('Error fetching collections:', error);
     }
-  }, [collection, cursor, sort, hasMore, resultsType, status]);
+  }, [collection, sort, hasMore, resultsType, status]);
 
   useEffect(() => {
     // Function to fetch data from the API

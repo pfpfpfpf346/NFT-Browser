@@ -8,7 +8,7 @@ const WalletExplorer = () => {
   const [walletAddress, setWalletAddress] = useState('');
   const [cursor, setCursor] = useState(null);
   const [hasMore, setHasMore] = useState(false);
-  const [sort, setSort] = useState('');
+  const [mode, setMode] = useState('default');
 
   const handleProcessData = useCallback(async (source) => {
     if (source === 'search') {
@@ -21,7 +21,7 @@ const WalletExplorer = () => {
       setHasMore(false); // Reset hasMore when initiating a new search
     }
     try {
-      const data = { walletAddress, cursor, sort };
+      const data = { walletAddress, cursor, mode };
       const response = await searchWallet(data);
       console.log('Processed data:', response);
       setCursor(response.next);
@@ -30,7 +30,7 @@ const WalletExplorer = () => {
     } catch (error) {
       console.error('Error fetching NFTs:', error);
     }
-  }, [walletAddress, cursor, sort, hasMore]);
+  }, [walletAddress, cursor, mode, hasMore]);
 
   useEffect(() => {
     const handleScroll = async () => {
@@ -64,19 +64,17 @@ const WalletExplorer = () => {
         />
 
         <select 
-          value={sort}
-          onChange={(e) => setSort(e.target.value)}
+          value={mode}
+          onChange={(e) => setMode(e.target.value)}
         >
-          <option value="">Select sort (unsorted)</option>
-          <option value="cfp">Collection floor price (estimate)</option>
-          <option value="rr">Recently Received</option>
-          <option value="bo">Best Offer</option>
-          {/* Add more options as needed */}
+          <option value="default">View NFTs:</option>
+          <option value="every">Everything</option>
+          <option value="listed">Listed NFTs only</option>
         </select>
 
         <button type="submit">Search</button>
       </form>
-      <NFTDisplayGrid content={output} />
+      <NFTDisplayGrid content={output} mode={mode} />
       {hasMore && (
         <div className="load-more">
           <p>Scroll to reveal more NFTs...</p>

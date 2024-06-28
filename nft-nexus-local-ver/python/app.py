@@ -31,14 +31,12 @@ def iterate_get_nfts(nfts_raw): # iterate getting nft out of json
         out.append([collection, identifier, token_standard, name, opensea_url]) # nft_data
     return out
 
-def get_nfts_acc(acc, cursor, order_dir, order_by): # get nfts from acc
+def get_nfts_acc(acc, cursor): # get nfts from acc
     if cursor:
         url = f"https://api.opensea.io/api/v2/chain/ethereum/account/{acc}/nfts?limit=100&next={cursor}"
     else:
         nfts = []
         url = f"https://api.opensea.io/api/v2/chain/ethereum/account/{acc}/nfts?limit=100"
-    if order_by:
-        url = url + f"&order_by={order_by}&order_direction={order_dir}"
     print(url)
     response = requests.get(url, headers=opensea_headers)
     print("get nft code:", response.status_code)
@@ -49,6 +47,49 @@ def get_nfts_acc(acc, cursor, order_dir, order_by): # get nfts from acc
         next = False
     nfts_raw = data['nfts']
     nfts = iterate_get_nfts(nfts_raw)
+    return (nfts, next)
+
+def iterate_get_listed_nfts(nfts_raw): # iterate getting nft out of json
+    nfts = []
+    for nft in nfts_raw:
+        asset = nft["maker_asset_bundle"]["assets"][0]
+        collection = asset["asset_contract"]["address"]
+        identifier = asset["token_id"]
+        collection_name = asset["collection"]["name"]
+        token_standard = asset["asset_contract"]["schema_name"]
+        name = asset["name"]
+        img = asset["image_url"]
+        price = float(nft["current_price"]) / 10**18
+        opensea_url = asset["permalink"]
+        is_verified = True if asset["collection"]["safelist_request_status"] == "verified" or asset["collection"]["safelist_request_status"] == "approved" else False
+        is_creator_fees_enforced = asset["collection"]["is_creator_fees_enforced"]
+        nfts.append([collection, collection_name, identifier, name, img, price, opensea_url, is_verified, is_creator_fees_enforced]) # nft_data_listed
+    
+    min_price_dict = {}
+    final = []
+    for nft in nfts: # delete duplicate listings, keep only lowest priced one
+        id = (nft[0], nft[2])
+        if id not in min_price_dict or nft[5] < min_price_dict[id]:
+            min_price_dict[id] = nft[5]
+            final.append(nft)
+    return final
+
+def get_nfts_listed_acc(acc, cursor): # get nfts from acc
+    if cursor:
+        url = f"https://api.opensea.io//api/v2/orders/ethereum/seaport/listings?cursor={cursor}&limit=50&maker={acc}"
+    else:
+        nfts = []
+        url = f"https://api.opensea.io//api/v2/orders/ethereum/seaport/listings?limit=50&maker={acc}"
+    print(url)
+    response = requests.get(url, headers=opensea_headers)
+    print("get nft code:", response.status_code)
+    data = response.json()
+    if 'next' in data:
+        next = data['next']
+    else:
+        next = False
+    nfts_raw = data['orders']
+    nfts = iterate_get_listed_nfts(nfts_raw)
     return (nfts, next)
 
 def alchemy_process(nfts):
@@ -90,25 +131,20 @@ def search_wallet():
     # Perform processing with the received data
     wallet_address = data['walletAddress']
     cursor = data['cursor']
-    sort = data['sort']
-    if sort == 'cfp':
-        order_dir = 'desc'
-        order_by = 'price'
-    elif sort == 'rr':
-        order_dir = 'desc'
-        order_by = 'created_date'
-    elif sort == 'bo':
-        order_dir = 'desc'
-        order_by = 'best_offer'
+    mode = data['mode']
+    if mode == "default" or mode == 'everything':
+        (nfts, next) = get_nfts_acc(wallet_address, cursor)
+        nfts_processed = alchemy_process(nfts)
+    elif mode == 'listed':
+        (nfts_processed, next) = get_nfts_listed_acc(wallet_address, cursor)
     else:
-        order_dir = ''
-        order_by = ''
-    (nfts, next) = get_nfts_acc(wallet_address, cursor, 0, order_dir, order_by)
+        (nfts, next) = get_nfts_acc(wallet_address, cursor)
+        nfts_processed = alchemy_process(nfts)
     #use alchemy to process nfts
-    nfts_processed = alchemy_process(nfts)
+    
     processed_data = {
         'message': 'Data processed successfully',
-        'input_data': wallet_address,
+        'input_data': [wallet_address, cursor, mode],
         'output': nfts_processed,
         'next': next
     }
@@ -150,7 +186,7 @@ def search_collections(collection, cursor, sort): # get collections
     response = requests.get(url, headers=alchemy_headers)
     print("search collections code:", response.status_code)
     data = response.json()
-    next = False
+    next = None
     collections_raw = data['contracts']
     collections = []
     for collection in collections_raw:
@@ -190,7 +226,7 @@ def load_collection():
     collections_processed = additional_info(collections)
     processed_data = {
         'message': 'Data processed successfully',
-        'input_data': "test",
+        'input_data': [collection, cursor],
         'output': collections_processed,
         'next': next
     }
