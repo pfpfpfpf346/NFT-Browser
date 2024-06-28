@@ -9,8 +9,10 @@ const WalletExplorer = () => {
   const [cursor, setCursor] = useState(null);
   const [hasMore, setHasMore] = useState(false);
   const [mode, setMode] = useState('default');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleProcessData = useCallback(async (source) => {
+    setIsLoading(true);
     if (source === 'search') {
       if (walletAddress.length !== 42) {
         setOutput("400");
@@ -29,6 +31,8 @@ const WalletExplorer = () => {
       setHasMore(response.output.length >= 100);
     } catch (error) {
       console.error('Error fetching NFTs:', error);
+    } finally {
+      setIsLoading(false);
     }
   }, [walletAddress, cursor, mode, hasMore]);
 
@@ -74,7 +78,7 @@ const WalletExplorer = () => {
 
         <button type="submit">Search</button>
       </form>
-      <NFTDisplayGrid content={output} mode={mode} />
+      {isLoading ? <p>Loading...</p> : <NFTDisplayGrid content={output} mode={mode} />}
       {hasMore && (
         <div className="load-more">
           <p>Scroll to reveal more NFTs...</p>

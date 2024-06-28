@@ -20,6 +20,10 @@ const Results = ({ content, mode }) => {
     return (
       <p>invalid input</p>
     )
+  } else if (content.length === 0) {
+    return (
+      <p>No NFTs found</p>
+    )
   }
   else {
     try {
