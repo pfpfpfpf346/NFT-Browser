@@ -122,7 +122,7 @@ def alchemy_process(nfts):
             name = nft_data[3]
         colle_name = opensea_metadata["collectionName"]
         image = nft_additional_data["image"]["cachedUrl"]
-        if not image:
+        if not image or image[:16] == "https://ipfs.io/":
             image = opensea_metadata["imageUrl"]
         fp = opensea_metadata["floorPrice"]
         opensea_url = nft_data[4]
