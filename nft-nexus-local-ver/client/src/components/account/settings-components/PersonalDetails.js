@@ -15,7 +15,7 @@ const PersonalDetails = () => {
     try {
       console.log(yourWalletAddress)
       const token = getToken();
-      // https://nft-browser.vercel.app/login / http://localhost:5000/login
+      // https://nft-browser.vercel.app/settings/personal-details / http://localhost:5000/settings/personal-details
       const response = await axios.post('http://localhost:5000/settings/personal-details', 
         { yourWalletAddress }, 
         { headers: { Authorization: `Bearer ${token}` }}

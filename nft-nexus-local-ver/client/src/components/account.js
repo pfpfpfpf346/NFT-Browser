@@ -27,6 +27,7 @@
             headers: { Authorization: `Bearer ${token}` },
           });
           setUser(response.data);
+          setAddress(response.data.address);
         } catch (error) {
           console.error('Failed to fetch user data', error);
           navigate('/login');
@@ -43,7 +44,7 @@
         case 'dashboard':
           return <Dashboard />;
         case 'owned-nfts':
-          return <Owned_NFTs />;
+          return <Owned_NFTs walletAddress={address} />;
         case 'favourites':
           return <Favourites />;
         case 'settings':
@@ -58,7 +59,7 @@
         <div class="account-header">
           <div class="account-basic-info">
             <h1 class='account-info'>Welcome, {user.username ? user.username : '<undefined>'}!</h1> {/* Display username */}
-            <p class='account-wallet'>Address: {user.address ? user.address : 'Not Set'}</p>
+            <p class='account-wallet'>Address: {address ? address : 'Not Set'}</p>
           </div>
           <button class='account-buttons' onClick={() => setContent('dashboard')}>Account Dashboard</button>
           <button class='account-buttons' onClick={() => setContent('owned-nfts')}>Owned NFTs</button>
