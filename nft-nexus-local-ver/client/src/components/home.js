@@ -29,6 +29,12 @@ const Home = () => {
     fetchData();
   }, [loadFeaturedNFT]);
 
+  const scaleImgUrl = (url, width) => {
+    const urlObj = new URL(url);
+    urlObj.searchParams.set('w', width);
+    return urlObj.toString();
+  }
+
   return (
     <main>
       <h1 align="center">NFT Nexus</h1>
@@ -36,7 +42,7 @@ const Home = () => {
       <div class="homepage-featured">
       {output.length > 0 && output[0].length > 5 && (
         <div className="image-container">
-          <img src={output[0][5]} alt="Collection Image" />
+          <img src={scaleImgUrl(output[0][5], 1920)} alt="Collection Image" />
           <div className="overlay">
             <p class="collection-title">{output[0][0]}</p>
             <p>#1 NFT in volume</p>
