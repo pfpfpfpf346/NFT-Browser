@@ -8,7 +8,7 @@
         "distDir": "client/build",
         "buildCommand": "npm run build-client",
         "outputDirectory": "client/build",
-        "developmentCommand": "npm start"
+        "developmentCommand": "npm run client"
       }
     },
     {
