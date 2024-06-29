@@ -29,10 +29,6 @@ const Home = () => {
     fetchData();
   }, [loadFeaturedNFT]);
 
-  useEffect(() => {
-    console.log('Output state updated:', output);
-  }, [output]);
-
   return (
     <main>
       <h1 align="center">NFT Nexus</h1>
