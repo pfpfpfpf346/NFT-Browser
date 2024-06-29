@@ -76,14 +76,14 @@ const Results = ({ content, interval, resultsType, status }) => {
                     </div>
                   </td>
                   <td>{row[3] ? row[3] : "--"}</td>
-                  <td>{row[5]["floor_price"] > 0 ? String(Math.round(row[5]["floor_price"] * 1000) / 1000) +
+                  <td>{row[6]["floor_price"] > 0 ? String(Math.round(row[6]["floor_price"] * 1000) / 1000) +
                     " ETH" : "--"}</td>
-                  <td>{String(Math.round(row[5]["market_cap"])) + " ETH"}</td>
+                  <td>{String(Math.round(row[6]["market_cap"])) + " ETH"}</td>
                   <td>{row[6][i]['sales']}</td>
-                  <td>{String(Math.round(row[6][i]['volume'] * 100) / 100) + " ETH"}</td>
+                  <td>{String(Math.round(row[7][i]['volume'] * 100) / 100) + " ETH"}</td>
                   <td>
-                    <p style={numberStyle(row[6][i]['volume_change'])}>
-                      {String(Math.round(row[6][i]['volume_change'] * 1000) / 10) + "%"}
+                    <p style={numberStyle(row[7][i]['volume_change'])}>
+                      {String(Math.round(row[7][i]['volume_change'] * 1000) / 10) + "%"}
                     </p>
                   </td>
                 </tr>

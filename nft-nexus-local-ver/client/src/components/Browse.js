@@ -25,7 +25,7 @@ const Browse = () => {
       setStatus('loading-more');
     }
     try {
-      const data = { collection, cursor: cursorRef.current, sort };
+      const data = { collection, cursor: cursorRef.current, sort, count: 20 };
       const response = await searchCollection(data);
       console.log('Processed data:', response);
       if (source === 'search' || source === 'load') {
