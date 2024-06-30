@@ -156,12 +156,12 @@ def search_wallet():
 
 # get collections api
 
-def load_collections(cursor, sort): # get collections
+def load_collections(cursor, sort, count): # get collections
     if cursor:
-        url = f"https://api.opensea.io/api/v2/collections?chain=ethereum&limit=20&next={cursor}&order_by={sort}"
+        url = f"https://api.opensea.io/api/v2/collections?chain=ethereum&limit={count}&next={cursor}&order_by={sort}"
     else:
         collections = []
-        url = f"https://api.opensea.io/api/v2/collections?chain=ethereum&limit=20&order_by={sort}"
+        url = f"https://api.opensea.io/api/v2/collections?chain=ethereum&limit={count}&order_by={sort}"
     print(url)
     response = requests.get(url, headers=opensea_headers)
     print("load collections code:", response.status_code)
@@ -178,7 +178,8 @@ def load_collections(cursor, sort): # get collections
         image = collection["image_url"]
         category = collection["category"]
         opensea_url = collection["opensea_url"]
-        collections.append([name, slug, image, category, opensea_url]) # nft_data
+        image_banner = collection["banner_image_url"]
+        collections.append([name, slug, image, category, opensea_url, image_banner]) # nft_data
     return (collections, next)
 
 def search_collections(collection, cursor, sort): # get collections
@@ -199,7 +200,8 @@ def search_collections(collection, cursor, sort): # get collections
         slug = opensea_metadata["collectionSlug"]
         image = opensea_metadata["imageUrl"]
         supply = collection["totalSupply"]
-        collections.append([name, slug, image, supply, None]) # nft_data
+        opensea_url = f"https://opensea.io/collection/{slug}"
+        collections.append([name, slug, image, supply, opensea_url, None]) # nft_data
     return (collections, next)
 
 def additional_info(collections):
@@ -219,6 +221,7 @@ def load_collection():
     data = request.get_json()
     collection = data['collection']
     cursor = data['cursor']
+    count = data['count']
     if data['sort'] == '':
         sort = "seven_day_volume"
     else:
@@ -226,7 +229,7 @@ def load_collection():
     if collection:
         (collections, next) = search_collections(collection, cursor, sort)
     else:
-        (collections, next) = load_collections(cursor, sort)
+        (collections, next) = load_collections(cursor, sort, count)
     collections_processed = additional_info(collections)
     processed_data = {
         'message': 'Data processed successfully',
