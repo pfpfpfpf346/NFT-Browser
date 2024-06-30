@@ -16,6 +16,7 @@ const WalletExplorer = () => {
     if (source === 'search') {
       if (walletAddress.length !== 42) {
         setOutput("400");
+        setIsLoading(false);
         return;
       }
       setOutput([]); // Clear the current output when initiating a new search
@@ -59,7 +60,7 @@ const WalletExplorer = () => {
 
   return (
     <main>
-      <p align="center">Enter wallet address to display NFTs in a wallet:</p>
+      <p align="center">Enter wallet address to display NFTs in a wallet: (e.g. "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045")</p>
       <form className="center" onSubmit={handleSubmit}>
         <input 
           type="text" 

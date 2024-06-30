@@ -200,7 +200,8 @@ def search_collections(collection, cursor, sort): # get collections
         slug = opensea_metadata["collectionSlug"]
         image = opensea_metadata["imageUrl"]
         supply = collection["totalSupply"]
-        collections.append([name, slug, image, supply, None]) # nft_data
+        opensea_url = f"https://opensea.io/collection/{slug}"
+        collections.append([name, slug, image, supply, opensea_url, None]) # nft_data
     return (collections, next)
 
 def additional_info(collections):
