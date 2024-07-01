@@ -2,9 +2,10 @@
   "name": "nft-nexus-local-ver",
   "version": "1.0.0",
   "scripts": {
-    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "start": "concurrently \"npm run server\" \"npm run client\" \"npm run python\"",
     "server": "cd server && npm start",
     "client": "cd client && npm run start",
+    "python": "cd python && python app.py",
     "build-client": "cd client && npm run build",
     "install-client": "cd client && npm install",
     "install-server": "cd server && npm install",
