@@ -10,8 +10,8 @@ app = Flask(__name__)
 CORS(app)
 load_dotenv()
 
-opensea_api_key = os.getenv('OPENSEA_API_KEY')
-alchemy_api_key = os.getenv('ALCHEMY_API_KEY')
+opensea_api_key = "d7bc517c25894772ae915ef729c8a443"
+alchemy_api_key = "Fn6XgY7SlhdqnbN09xv5QFenmRxaK0Ej"
 
 delay = 0.4
 
@@ -35,7 +35,7 @@ def iterate_get_nfts(nfts_raw): # iterate getting nft out of json
         out.append([collection, identifier, token_standard, name, opensea_url]) # nft_data
     return out
 
-def get_nfts_acc(acc, cursor): # get nfts from acc
+def get_nfts_acc(acc, cursor): # get nfts from account
     if cursor:
         url = f"https://api.opensea.io/api/v2/chain/ethereum/account/{acc}/nfts?limit=100&next={cursor}"
     else:
