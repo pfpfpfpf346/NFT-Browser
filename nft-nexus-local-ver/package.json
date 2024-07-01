@@ -5,12 +5,13 @@
     "start": "concurrently \"npm run server\" \"npm run client\" \"npm run python\"",
     "server": "cd server && npm start",
     "client": "cd client && npm run start",
-    "python": "cd python && python app.py",
+    "python": "node run-python-app.js",
     "build-client": "cd client && npm run build",
     "install-client": "cd client && npm install",
     "install-server": "cd server && npm install",
     "install-main": "cd server && npm install",
-    "install-all": "npm run install-main && npm run install-client && npm run install-server"
+    "setup-python-env": "node setup-python-env.js",
+    "install-all": "npm run install-main && npm run install-client && npm run install-server && npm run setup-python-env"
   },
   "devDependencies": {
     "cross-env": "^7.0.3"
