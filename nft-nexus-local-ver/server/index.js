@@ -23,10 +23,10 @@ app.use(cors()); // Enable CORS for all routes
 app.use(express.json());
 
 const pool = new Pool({
-  connectionString: process.env.POSTGRES_URL,
+  connectionString: "postgres://default:PVEbyHBpj65h@ep-twilight-sea-a4mpwb0v-pooler.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require",
 });
 
-const jwtSecretKey = process.env.JWT_SECRET;
+const jwtSecretKey = "6d4aecdc4712722d9ac57da9aaad537605979369d40a68a27539b21007aa3d42";
 
 app.post('/register', async (req, res) => {
   const { username, password } = req.body;

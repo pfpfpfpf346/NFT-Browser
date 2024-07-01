@@ -10,8 +10,8 @@ app = Flask(__name__)
 CORS(app)
 load_dotenv()
 
-opensea_api_key = os.getenv('OPENSEA_API_KEY')
-alchemy_api_key = os.getenv('ALCHEMY_API_KEY')
+opensea_api_key = "d7bc517c25894772ae915ef729c8a443"
+alchemy_api_key = "Fn6XgY7SlhdqnbN09xv5QFenmRxaK0Ej"
 
 delay = 0.4
 
